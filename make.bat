@@ -1,2 +1,2 @@
 mingw32-make
-main.exe
+yance.exe

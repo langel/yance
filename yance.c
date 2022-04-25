@@ -86,12 +86,13 @@ int main(int argc, char * args[]) {
 
 	SDL_Texture * texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, texture_w, texture_h);
 
-	SDL_UpdateTexture(texture, NULL, pixels, texture_w * 4);
-	SDL_RenderCopy(renderer, texture, NULL, NULL);
-	SDL_RenderPresent(renderer);
-
 	int running = 1;
 	while (running) {
+
+		SDL_UpdateTexture(texture, NULL, pixels, texture_w * 4);
+		SDL_RenderCopy(renderer, texture, NULL, NULL);
+		SDL_RenderPresent(renderer);
+
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
 				case SDL_QUIT:
