@@ -52,17 +52,23 @@ int main(int argc, char * args[]) {
 	}
 	// more normaller?
 	offset = file_length * 16;
+	int tilepage_offset = offset;
 	int tile_count = file_length >> 4;
 	printf("tile count: %d\n", tile_count);
-	for (int i = 0; i < file_length; i++) {
-		unsigned char lo = buffer[i];
-		unsigned char hi = buffer[i+8];
-		for (unsigned char bit = 0; bit < 8; bit++) {
-			unsigned char b = 1 << bit;
-			unsigned char color = (lo & b) ? 1 : 0;
-			color += (hi & b) ? 2 : 0;
-			pixels[offset] = colors[color];
-			offset++;
+	for (int i = 0; i < tile_count; i++) {
+		if (i % 256 == 0) offset = tilepage_offset + 256 + (i >> 8) * 256;;
+		int tile_x = (i % 16) * 8;
+		int tile_y = ((i % 256) >> 4) * 8;
+		for (int l = 0; l < 8; l++) {
+			unsigned char lo = buffer[i*16+l];
+			unsigned char hi = buffer[i*16+8+l];
+			for (unsigned char bit = 0; bit < 8; bit++) {
+				unsigned char b = 1 << bit;
+				unsigned char color = (lo & b) ? 1 : 0;
+				color += (hi & b) ? 2 : 0;
+				int pos = tile_x + (7 - bit) + (tile_y + l) * texture_w;
+				pixels[offset + pos] = colors[color];
+			}
 		}
 	}
 	free(buffer);
@@ -92,7 +98,7 @@ int main(int argc, char * args[]) {
 					running = 0;
 					break;
 				case SDL_KEYDOWN:
-					printf( "keydown: %8s\n", SDL_GetKeyName( event.key.keysym.sym ) );
+					//printf( "keydown: %8s\n", SDL_GetKeyName( event.key.keysym.sym ) );
 					switch (event.key.keysym.sym) {
 						case SDLK_ESCAPE:
 							running = 0;
