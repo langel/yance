@@ -11,6 +11,34 @@ uint32_t colors[4] = {
 	0xffffffff,
 };
 
+
+typedef struct {
+	int pal;
+	int px[64];
+} tile_array;
+
+
+tile_array _2bpp_to_64px(uint8_t data[]) {
+	// data[] = 16 bytes of 2bpp bit planed data
+	// returns array of 64 color index values
+	tile_array tile;
+	int pos = 0;
+	for (uint8_t l = 0; l < 8; l++) {
+		uint8_t lo = data[l];
+		uint8_t hi = data[8+l];
+		for (uint8_t bit = 0; bit < 8; bit++) {
+			uint8_t b = 1 << bit;
+			uint8_t color = (lo & b) ? 1 : 0;
+			color += (hi & b) ? 2 : 0;
+			tile.px[pos] = color;
+			pos++;
+		}
+	}
+	return tile;
+}
+
+
+
 int main(int argc, char * args[]) {
 
 	SDL_Init(SDL_INIT_VIDEO);
@@ -44,10 +72,10 @@ int main(int argc, char * args[]) {
 	int offset = file_length * 8 + texture_h * 10;
 	for (int i = 0; i < file_length; i++) {
 		unsigned char byte = buffer[i];
-		pixels[offset+0] = colors[(byte & 0b1100000) >> 6];
-		pixels[offset+1] = colors[(byte & 0b0011000) >> 4];
-		pixels[offset+2] = colors[(byte & 0b0001100) >> 2];
-		pixels[offset+3] = colors[(byte & 0b0000011) >> 0];
+		pixels[offset+0] = colors[(byte & 0b11000000) >> 6];
+		pixels[offset+1] = colors[(byte & 0b00110000) >> 4];
+		pixels[offset+2] = colors[(byte & 0b00001100) >> 2];
+		pixels[offset+3] = colors[(byte & 0b00000011) >> 0];
 		offset += 4;
 	}
 	// more normaller?
@@ -71,7 +99,6 @@ int main(int argc, char * args[]) {
 			}
 		}
 	}
-	free(buffer);
 
 	int lower = texture_w * 300;
 	pixels[lower + 10] = colors[3];
@@ -83,6 +110,17 @@ int main(int argc, char * args[]) {
 	pixels[lower + 16] = colors[1];
 	pixels[lower + 17] = colors[1];
 	pixels[lower + 18] = colors[1];
+
+	uint8_t sizteen_bytes[16];
+	for (int i = 0; i < 16; i++) {
+		sizteen_bytes[i] = buffer[i];
+	}
+	tile_array tile = _2bpp_to_64px(sizteen_bytes);
+	for (int i = 0; i < 64; i++) {
+		pixels[340 * texture_w + i] = colors[tile.px[i]];
+	}
+
+	free(buffer);
 
 	SDL_Texture * texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, texture_w, texture_h);
 
