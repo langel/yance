@@ -11,31 +11,7 @@ uint32_t colors[4] = {
 	0xffffffff,
 };
 
-
-typedef struct {
-	int pal;
-	int px[64];
-} tile_array;
-
-
-tile_array _2bpp_to_64px(uint8_t data[]) {
-	// data[] = 16 bytes of 2bpp bit planed data
-	// returns array of 64 color index values
-	tile_array tile;
-	int pos = 0;
-	for (uint8_t l = 0; l < 8; l++) {
-		uint8_t lo = data[l];
-		uint8_t hi = data[8+l];
-		for (uint8_t bit = 0; bit < 8; bit++) {
-			uint8_t b = 1 << bit;
-			uint8_t color = (lo & b) ? 1 : 0;
-			color += (hi & b) ? 2 : 0;
-			tile.px[pos] = color;
-			pos++;
-		}
-	}
-	return tile;
-}
+#include "src/tile.c"
 
 
 
@@ -59,27 +35,8 @@ int main(int argc, char * args[]) {
 	char * buffer = malloc(file_length);
 	fread(buffer, file_length, 1, file);
 	fclose(file);
-	// garble across
-	for (int i = 0; i < file_length; i++) {
-		unsigned char byte = buffer[i];
-		for (unsigned char x = 0; x < 8; x++) {
-			if ((1 << (7 - x)) & byte) {
-				pixels[i * 8 + x] = 0xffffffff;
-			}
-		}
-	}
-	// more normal?
-	int offset = file_length * 8 + texture_h * 10;
-	for (int i = 0; i < file_length; i++) {
-		unsigned char byte = buffer[i];
-		pixels[offset+0] = colors[(byte & 0b11000000) >> 6];
-		pixels[offset+1] = colors[(byte & 0b00110000) >> 4];
-		pixels[offset+2] = colors[(byte & 0b00001100) >> 2];
-		pixels[offset+3] = colors[(byte & 0b00000011) >> 0];
-		offset += 4;
-	}
-	// more normaller?
-	offset = file_length * 16;
+
+	int offset = texture_h * 10;
 	int tilepage_offset = offset;
 	int tile_count = file_length >> 4;
 	printf("tile count: %d\n", tile_count);
@@ -115,7 +72,7 @@ int main(int argc, char * args[]) {
 	for (int i = 0; i < 16; i++) {
 		sizteen_bytes[i] = buffer[i];
 	}
-	tile_array tile = _2bpp_to_64px(sizteen_bytes);
+	tile_struct tile = _2bpp_to_64px(sizteen_bytes);
 	for (int i = 0; i < 64; i++) {
 		pixels[340 * texture_w + i] = colors[tile.px[i]];
 	}
