@@ -1,8 +1,5 @@
 
 
-
-
-
 typedef struct {
 	int pal;
 	int px[64];
@@ -18,7 +15,7 @@ tile_struct _2bpp_to_64px(uint8_t data[]) {
 		uint8_t lo = data[l];
 		uint8_t hi = data[8+l];
 		for (uint8_t bit = 0; bit < 8; bit++) {
-			uint8_t b = 1 << bit;
+			uint8_t b = 1 << (7 - bit);
 			uint8_t color = (lo & b) ? 1 : 0;
 			color += (hi & b) ? 2 : 0;
 			tile.px[pos] = color;
@@ -28,4 +25,9 @@ tile_struct _2bpp_to_64px(uint8_t data[]) {
 	return tile;
 }
 
-
+void _64px_to_surface(tile_struct tile, uint32_t *surface, int x, int y, int w) {
+	int offset = x + y * w;
+	for (int i = 0; i < 64; i++) {
+		surface[offset + (i & 7) + (i >> 3) * w] = colors[tile.px[i]];
+	}
+}

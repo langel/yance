@@ -26,6 +26,9 @@ int main(int argc, char * args[]) {
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 	uint32_t * pixels = malloc(texture_w * texture_h * 4);
+	for (int i = 0; i < texture_w * texture_h; i++) {
+		pixels[i] = 0x1f1f1fff;
+	}
 
 	FILE * file = fopen("guntner.chr", "rb");
 	fseek(file, 0, SEEK_END);
@@ -57,24 +60,14 @@ int main(int argc, char * args[]) {
 		}
 	}
 
-	int lower = texture_w * 300;
-	pixels[lower + 10] = colors[3];
-	pixels[lower + 11] = colors[3];
-	pixels[lower + 12] = colors[3];
-	pixels[lower + 13] = colors[2];
-	pixels[lower + 14] = colors[2];
-	pixels[lower + 15] = colors[2];
-	pixels[lower + 16] = colors[1];
-	pixels[lower + 17] = colors[1];
-	pixels[lower + 18] = colors[1];
-
+	tile_struct tiles[256];
 	uint8_t sizteen_bytes[16];
-	for (int i = 0; i < 16; i++) {
-		sizteen_bytes[i] = buffer[i];
-	}
-	tile_struct tile = _2bpp_to_64px(sizteen_bytes);
-	for (int i = 0; i < 64; i++) {
-		pixels[340 * texture_w + i] = colors[tile.px[i]];
+	for (int t = 0; t < 64; t++) {
+		for (int i = 0; i < 16; i++) {
+			sizteen_bytes[i] = buffer[(t << 4) + i];
+		}
+		tiles[t] = _2bpp_to_64px(sizteen_bytes);
+		_64px_to_surface(tiles[t], pixels, t << 3, 150, texture_w);
 	}
 
 	free(buffer);
