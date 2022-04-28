@@ -4,13 +4,16 @@
 int texture_w = 640;
 int texture_h = 360;
 
+/*
 uint32_t colors[4] = {
 	0x000000ff,
 	0x555555ff,
 	0xaaaaaaff,
 	0xffffffff,
 };
+*/
 
+#include "src/color.c"
 #include "src/tile.c"
 
 
@@ -55,7 +58,7 @@ int main(int argc, char * args[]) {
 				unsigned char color = (lo & b) ? 1 : 0;
 				color += (hi & b) ? 2 : 0;
 				int pos = tile_x + (7 - bit) + (tile_y + l) * texture_w;
-				pixels[offset + pos] = colors[color];
+				pixels[offset + pos] = colors[1 + 16 * color];
 			}
 		}
 	}
@@ -68,6 +71,16 @@ int main(int argc, char * args[]) {
 		}
 		tiles[t] = _2bpp_to_64px(sizteen_bytes);
 		_64px_to_surface(tiles[t], pixels, t << 3, 150, texture_w);
+	}
+
+	for (int c = 0; c < 64; c++) {
+		int xoff = (c % 16) * 24;
+		int yoff = (c >> 4) * 24;
+		for (int x = 0; x < 24; x++) {
+			for (int y = 0; y < 24; y++) {
+				pixels[200 + xoff + x + (200 + yoff + y) * texture_w] = colors[c];
+			}
+		}
 	}
 
 	free(buffer);
