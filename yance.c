@@ -33,10 +33,30 @@ int main(int argc, char * args[]) {
 		pixels[i] = 0x1f1f1fff;
 	}
 
+	FILE * font = fopen("src/8x16font.bin", "rb");
+	fseek(font, 0, SEEK_END);
+	int font_length = ftell(font);
+	fseek(font, 0, SEEK_SET);
+	char * font_set = malloc(font_length);
+	fread(font_set, font_length, 1, font);
+	fclose(font);
+	for (int i = 0; i < 256; i++) {
+		for (int l = 0; l < 16; l++) {
+			unsigned char byte = font_set[i*16+l];
+			for (unsigned char bit = 0; bit < 8; bit++) {
+				unsigned char b = 1 << bit;
+				unsigned char color = (b & byte) ? 0x0d : 21;
+				int pos = 240+ (i % 32) * 8 + bit + ((i >> 5) * 16 + l + 220) * texture_w;
+				pixels[pos] = colors[color];
+			}
+		}
+	}
+
+
 	FILE * file = fopen("guntner.chr", "rb");
 	fseek(file, 0, SEEK_END);
 	int file_length = ftell(file);
-	printf("rom size: %d\n", file_length);
+	printf("char rom size: %d\n", file_length);
 	fseek(file, 0, SEEK_SET);
 	char * buffer = malloc(file_length);
 	fread(buffer, file_length, 1, file);
@@ -63,14 +83,17 @@ int main(int argc, char * args[]) {
 		}
 	}
 
-	tile_struct tiles[256];
+	tile_struct tiles[tile_count];
 	uint8_t sizteen_bytes[16];
-	for (int t = 0; t < 64; t++) {
+	for (int t = 0; t < tile_count; t++) {
 		for (int i = 0; i < 16; i++) {
 			sizteen_bytes[i] = buffer[(t << 4) + i];
 		}
 		tiles[t] = _2bpp_to_64px(sizteen_bytes);
-		_64px_to_surface(tiles[t], pixels, t << 3, 150, texture_w);
+		_64px_to_surface(tiles[t], pixels, 
+			32 + (t * 8) % 128 + (t % 16),
+			32 + (t >> 4) * 8 + (t >> 4),
+			texture_w);
 	}
 
 	for (int c = 0; c < 64; c++) {
@@ -78,7 +101,7 @@ int main(int argc, char * args[]) {
 		int yoff = (c >> 4) * 24;
 		for (int x = 0; x < 24; x++) {
 			for (int y = 0; y < 24; y++) {
-				pixels[200 + xoff + x + (200 + yoff + y) * texture_w] = colors[c];
+				pixels[200 + xoff + x + (100 + yoff + y) * texture_w] = colors[c];
 			}
 		}
 	}
