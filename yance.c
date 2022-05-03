@@ -18,6 +18,12 @@ uint32_t colors[4] = {
 #include "src/color.c"
 #include "src/tile.c"
 
+void sfx_plot() {
+	audio_amp = 0.1;
+	audio_fade = 0.9996;
+	audio_hertz = ((float) rng8() + 420.0) / 32000.0;
+	audio_bend = 0.9991;
+}
 
 
 int main(int argc, char * args[]) {
@@ -25,11 +31,10 @@ int main(int argc, char * args[]) {
 	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO);
 	SDL_Event event;
 
+	audio_init(32000, 2, 1024, AUDIO_F32SYS, &audio_callback);
 	window_rect = (SDL_Rect) { 100, 200, texture_w*2, texture_h*2 };
 	window_init("Yet Another NES Character Editor");
 
-	//window = SDL_CreateWindow("Yet Another NES Character Editor",
-	//	100, 200, texture_w*2, texture_h*2, SDL_WINDOW_RESIZABLE);
 	SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
@@ -161,6 +166,9 @@ void font_render_text(char *text, font_struct f, SDL_Renderer * renderer, SDL_Re
 
 		keyboard_update();
 		mouse_update(window_rect);
+		if (mouse.button_left == 1
+		|| (mouse.button_left && (mouse.rel_x != 0 || mouse.rel_y != 0))) sfx_plot();
+
 		float x_ratio = (float) window_rect.w / (float) texture_w;
 		float y_ratio = (float) window_rect.h / (float) texture_h;
 
