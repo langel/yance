@@ -13,6 +13,7 @@ uint32_t colors[4] = {
 };
 */
 
+#include "lib/mouse.c"
 #include "src/color.c"
 #include "src/tile.c"
 
@@ -24,6 +25,7 @@ int main(int argc, char * args[]) {
 	SDL_Event event;
 	SDL_Window * window = SDL_CreateWindow("Yet Another NES Character Editor",
 		100, 200, texture_w*2, texture_h*2, SDL_WINDOW_RESIZABLE);
+	SDL_Rect window_rect = { 100, 200, texture_w*2, texture_h*2 };
 	SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 
 		SDL_RENDERER_PRESENTVSYNC);
 
@@ -110,12 +112,30 @@ int main(int argc, char * args[]) {
 
 	SDL_Texture * texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, texture_w, texture_h);
 
+	// mouse init
+	mouse_data mouse = mouse_init();
+	//SDL_ShowCursor(SDL_DISABLE);
+	int paint_color = colors[37];
+
 	int running = 1;
 	while (running) {
 
 		SDL_UpdateTexture(texture, NULL, pixels, texture_w * 4);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);
+
+		// mouse updates
+		mouse_process(&mouse, &window_rect);
+		if (mouse.button_left) {
+			int pixel = mouse.x / 2 + texture_w * (mouse.y / 2);
+			pixels[pixel] = paint_color;
+			pixel++;
+			pixels[pixel] = paint_color;
+			pixel += texture_w;
+			pixels[pixel] = paint_color;
+			pixel--;
+			pixels[pixel] = paint_color;
+		}
 
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
