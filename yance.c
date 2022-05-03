@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <SDL2/SDL.h>
 
 int texture_w = 640;
@@ -13,7 +14,7 @@ uint32_t colors[4] = {
 };
 */
 
-#include "lib/mouse.c"
+#include "lib/all.c"
 #include "src/color.c"
 #include "src/tile.c"
 
@@ -21,13 +22,15 @@ uint32_t colors[4] = {
 
 int main(int argc, char * args[]) {
 
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO);
 	SDL_Event event;
-	SDL_Window * window = SDL_CreateWindow("Yet Another NES Character Editor",
-		100, 200, texture_w*2, texture_h*2, SDL_WINDOW_RESIZABLE);
-	SDL_Rect window_rect = { 100, 200, texture_w*2, texture_h*2 };
-	SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 
-		SDL_RENDERER_PRESENTVSYNC);
+
+	window_rect = (SDL_Rect) { 100, 200, texture_w*2, texture_h*2 };
+	window_init("Yet Another NES Character Editor");
+
+	//window = SDL_CreateWindow("Yet Another NES Character Editor",
+	//	100, 200, texture_w*2, texture_h*2, SDL_WINDOW_RESIZABLE);
+	SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 	uint32_t * pixels = malloc(texture_w * texture_h * 4);
@@ -42,13 +45,22 @@ int main(int argc, char * args[]) {
 	char * font_set = malloc(font_length);
 	fread(font_set, font_length, 1, font);
 	fclose(font);
+	unsigned char char_width = 9;
 	for (int i = 0; i < 256; i++) {
 		for (int l = 0; l < 16; l++) {
 			unsigned char byte = font_set[i*16+l];
-			for (unsigned char bit = 0; bit < 8; bit++) {
-				unsigned char b = 1 << bit;
-				unsigned char color = (b & byte) ? 0x0d : 21;
-				int pos = 240+ (i % 32) * 8 + bit + ((i >> 5) * 16 + l + 220) * texture_w;
+			for (uint16_t bit = 0; bit < char_width; bit++) {
+				// handling 9 pixel wide fonts defined here:
+				// https://en.wikipedia.org/wiki/VGA_text_mode#Fonts
+				uint16_t b = 1 << bit;
+				// only extend font if certain range (box characters)
+				if (bit >= 8) {
+					if (i >= 0xc0 && i <= 0xdf) b >>= 1;
+					else b = byte = 0xff;
+				}
+				// XXX if true place pixel
+				int color = ((unsigned char) b & byte) ? 0x0f : 21;
+				int pos = 240+ (i % 32) * char_width + bit + ((i >> 5) * 16 + l + 220) * texture_w;
 				pixels[pos] = colors[color];
 			}
 		}
@@ -112,9 +124,32 @@ int main(int argc, char * args[]) {
 
 	SDL_Texture * texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, texture_w, texture_h);
 
-	// mouse init
-	mouse_data mouse = mouse_init();
+
+/*
+void font_set_color(font_struct f, SDL_Color color) {
+	SDL_SetTextureColorMod(f.texture, color.r, color.g, color.b);
+}
+// target texture must be defined before calling
+void font_render_text(char *text, font_struct f, SDL_Renderer * renderer, SDL_Rect rect) {
+	int length = strlen(text);
+	SDL_Rect char_buff = { 0, 0, f.width, f.height };
+	char_buff = rect;
+	for (int i = 0; i < length; i++) {
+		int char_id = (int) text[i];
+	//	printf(" %3d ", char_id);
+		int width = f.char_rect[char_id].w;
+		char_buff.w = width;
+		SDL_RenderCopy(renderer, f.texture, &f.char_rect[char_id], &char_buff);
+		char_buff.x += width;
+	}
+}
+*/
+
+
+	keyboard_init();
+	mouse_init();
 	//SDL_ShowCursor(SDL_DISABLE);
+
 	int paint_color = colors[37];
 
 	int running = 1;
@@ -124,10 +159,18 @@ int main(int argc, char * args[]) {
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);
 
-		// mouse updates
-		mouse_process(&mouse, &window_rect);
-		if (mouse.button_left) {
-			int pixel = mouse.x / 2 + texture_w * (mouse.y / 2);
+		keyboard_update();
+		mouse_update(window_rect);
+		float x_ratio = (float) window_rect.w / (float) texture_w;
+		float y_ratio = (float) window_rect.h / (float) texture_h;
+
+		if (mouse.button_left
+			&& mouse.x >= 0 
+			&& mouse.x < (int) ((float) texture_w * x_ratio)
+			&& mouse.y >= 0 
+			&& mouse.y < (int) ((float) texture_h * y_ratio)) {
+			int pixel = (int) ((float) mouse.x / x_ratio) 
+			+ texture_w * (int) ((float) mouse.y / y_ratio);
 			pixels[pixel] = paint_color;
 			pixel++;
 			pixels[pixel] = paint_color;
@@ -151,6 +194,7 @@ int main(int argc, char * args[]) {
 					}
 					break;
 			}
+			window_event_process(event);
 		}
 	}
 
