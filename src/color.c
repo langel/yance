@@ -1,5 +1,6 @@
 
-uint32_t colors[0x40] = {
+uint32_t colors[0x50] = {
+// NES COLORS 0 - 63
 	// 0x00 - 0x0f
 	0x666666ff,
 	0x002a88ff,
@@ -68,5 +69,7 @@ uint32_t colors[0x40] = {
 	0xb8b8b8ff,
 	0x000000ff,
 	0x000000ff,
+// SYSTEM COLORS
+	0x1f1f1fff,
 };
 

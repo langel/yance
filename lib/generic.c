@@ -15,6 +15,14 @@ int rng8() {
 	return (int) val;
 }
 
+void render_color_set(SDL_Renderer * renderer, uint32_t color) {
+	SDL_SetRenderDrawColor(renderer,
+		color >> 24, 
+		color >> 16 & 0xff, 
+		color >> 8 & 0xff,
+		0xff);
+}
+
 SDL_Texture * texture_create_generic(SDL_Renderer * renderer, int w, int h) {
 	SDL_Texture * texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, h);
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
