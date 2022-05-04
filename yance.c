@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <SDL2/SDL.h>
 
 int texture_w = 640;
@@ -72,9 +73,6 @@ int main(int argc, char * args[]) {
 		}
 	}
 
-	// STATUS BAR INIT
-	char status_text[256];
-	SDL_Rect status_rect = { 0, 0, window_rect.w, 16 };
 
 	tile_struct tiles[tile_count];
 	uint8_t sizteen_bytes[16];
@@ -106,13 +104,15 @@ int main(int argc, char * args[]) {
 
 	int colors_x, colors_y;
 	
-	uint64_t fps_start;
-	uint64_t fps_end;
-	double fps_elapsed;
+	// STATUS BAR INIT
+	char status_text[256];
+	SDL_Rect status_rect = { 0, 0, window_rect.w, 16 };
 
-	uint64_t fps_newtime = 0;
-	uint64_t fps_oldtime;
-	float fps_current = 0.f;
+	time_t fps_start = time(NULL);
+	time_t fps_end;
+	uint32_t fps_counter;
+	float fps_current;
+
 
 	int running = 1;
 	while (running) {
@@ -144,15 +144,15 @@ int main(int argc, char * args[]) {
 		ascii_color_set(colors[status_text_color]);
 		status_text_color++;
 		if (status_text_color > 0x3c) status_text_color	= 0x31;
-		sprintf(status_text, " TILE COUNT: %5d     ROM SIZE: %7d bytes     NO HEADER     FPS: %6f", tile_count, file_length, fps_current);
+		sprintf(status_text, " TILE COUNT: %5d     ROM SIZE: %7d bytes     NO HEADER     FPS: %7.3f", tile_count, file_length, fps_current);
 		ascii_text_render(renderer, status_text, 0, window_rect.h - 16);
 
 		SDL_RenderPresent(renderer);
 
 		// FPS
-		fps_oldtime = fps_newtime;
-		fps_newtime = SDL_GetTicks64();
-		fps_current = 1.f / ((float) (fps_newtime - fps_oldtime) / 1000.f);
+		fps_end = time(NULL);
+		fps_counter++;
+		fps_current = 1.f / ((float) (fps_end - fps_start) / (float) fps_counter);
 
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {

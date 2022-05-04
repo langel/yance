@@ -28,10 +28,11 @@ void ascii_init(uint32_t * pixels, SDL_Renderer * renderer) {
 				int pos = 240 + (i % 32) * char_w + bit + ((i >> 5) * char_h + l + 220) * texture_w;
 				pixels[pos] = colors[color];
 				// create reference texture
+				int pixel = i * char_w + bit + l * temp_w;
 				if (!((unsigned char) b & byte)) {
-					int pixel = i * char_w + bit + l * temp_w;
 					temp[pixel] = 0xffffffff;
 				}
+				else temp[pixel] = 0x00000000;
 			}
 		}
 	}
