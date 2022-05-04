@@ -17,10 +17,11 @@ uint32_t colors[4] = {
 #include "lib/all.c"
 #include "src/color.c"
 #include "src/tile.c"
+#include "src/ascii_9x16.c"
 
 void sfx_plot() {
 	audio_amp = 0.1;
-	audio_fade = 0.9996;
+	audio_fade = 0.998;
 	audio_hertz = ((float) rng8() + 420.0) / 32000.0;
 	audio_bend = 0.9991;
 }
@@ -29,6 +30,7 @@ void sfx_plot() {
 int main(int argc, char * args[]) {
 
 	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO);
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 	SDL_Event event;
 
 	audio_init(32000, 2, 1024, AUDIO_F32SYS, &audio_callback);
@@ -37,40 +39,10 @@ int main(int argc, char * args[]) {
 
 	SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 	uint32_t * pixels = malloc(texture_w * texture_h * 4);
 	for (int i = 0; i < texture_w * texture_h; i++) {
 		pixels[i] = 0x1f1f1fff;
 	}
-
-	FILE * font = fopen("src/8x16font.bin", "rb");
-	fseek(font, 0, SEEK_END);
-	int font_length = ftell(font);
-	fseek(font, 0, SEEK_SET);
-	char * font_set = malloc(font_length);
-	fread(font_set, font_length, 1, font);
-	fclose(font);
-	unsigned char char_width = 9;
-	for (int i = 0; i < 256; i++) {
-		for (int l = 0; l < 16; l++) {
-			unsigned char byte = font_set[i*16+l];
-			for (uint16_t bit = 0; bit < char_width; bit++) {
-				// handling 9 pixel wide fonts defined here:
-				// https://en.wikipedia.org/wiki/VGA_text_mode#Fonts
-				uint16_t b = 1 << bit;
-				// only extend font if certain range (box characters)
-				if (bit >= 8) {
-					if (i >= 0xc0 && i <= 0xdf) b >>= 1;
-					else b = byte = 0xff;
-				}
-				// XXX if true place pixel
-				int color = ((unsigned char) b & byte) ? 0x0f : 21;
-				int pos = 240+ (i % 32) * char_width + bit + ((i >> 5) * 16 + l + 220) * texture_w;
-				pixels[pos] = colors[color];
-			}
-		}
-	}
-
 
 	FILE * file = fopen("guntner.chr", "rb");
 	fseek(file, 0, SEEK_END);
@@ -102,6 +74,12 @@ int main(int argc, char * args[]) {
 		}
 	}
 
+	char status_text[80];
+	sprintf(status_text, " TILE COUNT: %5d     ROM SIZE: %7d bytes     NO HEADER ", tile_count, file_length);
+	printf(status_text);
+	SDL_Texture * status_texture = texture_create_generic(renderer, 80 * 9, 16);
+	ascii_text_render(renderer, status_texture, status_text);
+
 	tile_struct tiles[tile_count];
 	uint8_t sizteen_bytes[16];
 	for (int t = 0; t < tile_count; t++) {
@@ -130,27 +108,7 @@ int main(int argc, char * args[]) {
 	SDL_Texture * texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, texture_w, texture_h);
 
 
-/*
-void font_set_color(font_struct f, SDL_Color color) {
-	SDL_SetTextureColorMod(f.texture, color.r, color.g, color.b);
-}
-// target texture must be defined before calling
-void font_render_text(char *text, font_struct f, SDL_Renderer * renderer, SDL_Rect rect) {
-	int length = strlen(text);
-	SDL_Rect char_buff = { 0, 0, f.width, f.height };
-	char_buff = rect;
-	for (int i = 0; i < length; i++) {
-		int char_id = (int) text[i];
-	//	printf(" %3d ", char_id);
-		int width = f.char_rect[char_id].w;
-		char_buff.w = width;
-		SDL_RenderCopy(renderer, f.texture, &f.char_rect[char_id], &char_buff);
-		char_buff.x += width;
-	}
-}
-*/
-
-
+	ascii_init(pixels, renderer);
 	keyboard_init();
 	mouse_init();
 	//SDL_ShowCursor(SDL_DISABLE);
@@ -162,31 +120,9 @@ void font_render_text(char *text, font_struct f, SDL_Renderer * renderer, SDL_Re
 
 		SDL_UpdateTexture(texture, NULL, pixels, texture_w * 4);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
+		ascii_rect.y = window_rect.h - 32;
+		SDL_RenderCopy(renderer, ascii_texture, NULL, &ascii_rect);
 		SDL_RenderPresent(renderer);
-
-		keyboard_update();
-		mouse_update(window_rect);
-		if (mouse.button_left == 1
-		|| (mouse.button_left && (mouse.rel_x != 0 || mouse.rel_y != 0))) sfx_plot();
-
-		float x_ratio = (float) window_rect.w / (float) texture_w;
-		float y_ratio = (float) window_rect.h / (float) texture_h;
-
-		if (mouse.button_left
-			&& mouse.x >= 0 
-			&& mouse.x < (int) ((float) texture_w * x_ratio)
-			&& mouse.y >= 0 
-			&& mouse.y < (int) ((float) texture_h * y_ratio)) {
-			int pixel = (int) ((float) mouse.x / x_ratio) 
-			+ texture_w * (int) ((float) mouse.y / y_ratio);
-			pixels[pixel] = paint_color;
-			pixel++;
-			pixels[pixel] = paint_color;
-			pixel += texture_w;
-			pixels[pixel] = paint_color;
-			pixel--;
-			pixels[pixel] = paint_color;
-		}
 
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
@@ -204,6 +140,26 @@ void font_render_text(char *text, font_struct f, SDL_Renderer * renderer, SDL_Re
 			}
 			window_event_process(event);
 		}
+		
+		float x_ratio = (float) window_rect.w / (float) texture_w;
+		float y_ratio = (float) window_rect.h / (float) texture_h;
+		
+		keyboard_update();
+		mouse_update(window_rect);
+		if ((mouse.button_left == 1 || (mouse.button_left && (mouse.rel_x != 0 || mouse.rel_y != 0)))
+		&& mouse.x >= 0 && mouse.x < (int) ((float) texture_w * x_ratio)
+		&& mouse.y >= 0 && mouse.y < (int) ((float) texture_h * y_ratio)) {
+			int pixel = (int) ((float) mouse.x / x_ratio) + texture_w * (int) ((float) mouse.y / y_ratio);
+			pixels[pixel] = paint_color;
+			pixel++;
+			pixels[pixel] = paint_color;
+			pixel += texture_w;
+			pixels[pixel] = paint_color;
+			pixel--;
+			pixels[pixel] = paint_color;
+			sfx_plot();
+		}
+
 	}
 
 	SDL_Quit();
