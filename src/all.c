@@ -1,0 +1,16 @@
+
+#include "./color.c"
+#include "./sfx.c"
+#include "./tile.c"
+#include "./rom.c"
+#include "./table.c"
+#include "./ascii_9x16.c"
+
+void all_init() {
+	audio_init(32000, 2, 1024, AUDIO_F32SYS, &audio_callback);
+	ascii_init();
+	keyboard_init();
+	mouse_init();
+	rom_init();
+	table_init();
+}

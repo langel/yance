@@ -25,7 +25,7 @@ tile_struct _2bpp_to_64px(uint8_t data[]) {
 	return tile;
 }
 
-void _64px_to_surface(tile_struct tile, uint32_t *surface, int x, int y, int w) {
+void _64px_to_surface(tile_struct tile, uint32_t * surface, int x, int y, int w) {
 	int offset = x + y * w;
 	for (int i = 0; i < 64; i++) {
 		surface[offset + (i & 7) + (i >> 3) * w] = colors[4 + 16 * tile.px[i]];

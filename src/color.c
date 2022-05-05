@@ -70,6 +70,11 @@ uint32_t colors[0x50] = {
 	0x000000ff,
 	0x000000ff,
 // SYSTEM COLORS
-	0x1f1f1fff,
+	0x1f1f1fff, // dark gray / bg darkerer gray
+
+	0x000000ff, // black
+	0x555555ff, // dark gray
+	0xaaaaaaff, // light gray
+	0xffffffff, // white
 };
 

@@ -4,7 +4,7 @@
 SDL_Texture * ascii_texture;
 SDL_Rect ascii_rect;
 
-void ascii_init(uint32_t * pixels, SDL_Renderer * renderer) {
+void ascii_init() {
 	unsigned char char_w = 9;
 	unsigned char char_h = 16;
 	int temp_w = 256 * 9;
@@ -23,10 +23,6 @@ void ascii_init(uint32_t * pixels, SDL_Renderer * renderer) {
 					if (i >= 0xc0 && i <= 0xdf) b >>= 1;
 					else b = byte = 0xff;
 				}
-				// XXX if true place pixel
-				int color = ((unsigned char) b & byte) ? 0x0f : 21;
-				int pos = 240 + (i % 32) * char_w + bit + ((i >> 5) * char_h + l + 220) * texture_w;
-				pixels[pos] = colors[color];
 				// create reference texture
 				int pixel = i * char_w + bit + l * temp_w;
 				if (!((unsigned char) b & byte)) {
@@ -48,7 +44,7 @@ void ascii_color_set(uint32_t color_value) {
 		color_value >> 8 & 0xff);
 }
 
-void ascii_text_render(SDL_Renderer * renderer, char * text, int x, int y) {
+void ascii_text_render(char * text, int x, int y) {
 	int length = strlen(text);
 	SDL_Rect src = { 0, 0, 9, 16 };
 	SDL_Rect dest = { x, y, 9, 16 };
