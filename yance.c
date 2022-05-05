@@ -51,6 +51,8 @@ int main(int argc, char * args[]) {
 		render_color_set(renderer, colors[64]);
 		SDL_RenderFillRect(renderer, NULL);
 
+		SDL_RenderCopy(renderer, table_texture, NULL, NULL);
+
 		// ALL COLORS
 		colors_x = 8;
 		colors_y = window_rect.h - 200;

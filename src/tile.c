@@ -1,12 +1,13 @@
 
 
 typedef struct {
-	int pal;
-	int px[64];
+	uint8_t pal;
+	uint8_t px[64];
+	SDL_Texture * texture;
 } tile_struct;
 
 
-tile_struct _2bpp_to_64px(uint8_t data[]) {
+tile_struct _2bpp_to_64px(uint8_t data[16]) {
 	// data[] = 16 bytes of 2bpp bit planed data
 	// returns array of 64 color index values
 	tile_struct tile;

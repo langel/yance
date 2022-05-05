@@ -7,17 +7,17 @@
 // x 32bit color = 8,388,608 of GPU RAM
 SDL_Texture * table_texture;
 
+tile_struct table_tiles[512];
+
 void table_init() {
-	table_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 128, 2048);
 }
 
 void table_load(char * filename) {
 	rom_load(filename);
-	tile_struct tiles[rom_tile_count];
+	table_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 128, (rom_tile_count << 4) * 8);
 	//uint32_t pixels[128 * 16384 * 4];
-	uint32_t pixels[rom_tile_count * 64 * 4];
-	uint8_t sizteen_bytes[16];
-	return;
+	uint32_t pixels[rom_tile_count * 64];
+	char sizteen_bytes[16];
 	for (int t = 0; t < rom_tile_count; t++) {
 		for (int i = 0; i < 16; i++) {
 			sizteen_bytes[i] = rom_binary[(t << 4) + i];
@@ -26,7 +26,7 @@ void table_load(char * filename) {
 		_64px_to_surface(tiles[t], pixels, 
 			32 + (t * 8) % 128 + (t % 16),
 			32 + (t >> 4) * 8 + (t >> 4),
-			texture_w);
+			128);
 	}
 	SDL_UpdateTexture(table_texture, NULL, pixels, 128 * 4);
 }
