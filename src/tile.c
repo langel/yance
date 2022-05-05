@@ -2,15 +2,17 @@
 
 typedef struct {
 	uint8_t pal;
-	uint8_t px[64];
+	uint8_t values[64];
+	uint32_t * color_data;
 	SDL_Texture * texture;
 } tile_struct;
 
+SDL_Rect tile_rect = { 0, 0, 8, 8 };
 
-tile_struct _2bpp_to_64px(uint8_t data[16]) {
+void _2bpp_to_tile(uint8_t data[16], tile_struct * tile) {
 	// data[] = 16 bytes of 2bpp bit planed data
 	// returns array of 64 color index values
-	tile_struct tile;
+	tile->pal = 0;
 	int pos = 0;
 	for (uint8_t l = 0; l < 8; l++) {
 		uint8_t lo = data[l];
@@ -19,16 +21,17 @@ tile_struct _2bpp_to_64px(uint8_t data[16]) {
 			uint8_t b = 1 << (7 - bit);
 			uint8_t color = (lo & b) ? 1 : 0;
 			color += (hi & b) ? 2 : 0;
-			tile.px[pos] = color;
+			tile->values[pos] = color;
+			tile->color_data[pos] = colors[palette[tile->pal][color]];
 			pos++;
 		}
 	}
-	return tile;
+	SDL_UpdateTexture(tile->texture, NULL, tile->color_data, 8 * 4);
 }
 
 void _64px_to_surface(tile_struct tile, uint32_t * surface, int x, int y, int w) {
 	int offset = x + y * w;
 	for (int i = 0; i < 64; i++) {
-		surface[offset + (i & 7) + (i >> 3) * w] = colors[4 + 16 * tile.px[i]];
+		surface[offset + (i & 7) + (i >> 3) * w] = colors[4 + 16 * tile.values[i]];
 	}
 }

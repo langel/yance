@@ -69,6 +69,17 @@ uint32_t colors[0x50] = {
 	0xb8b8b8ff,
 	0x000000ff,
 	0x000000ff,
+// MATRIAX8C palette
+	// 0x40 - 0x47
+	// 64 - 71
+	0xf0f0dcff, // white
+	0xfac800ff, // yellow
+	0x10c840ff, // green
+	0x00a0c8ff, // blue
+	0xd24040ff, // red
+	0xa0694bff, // brown
+	0x736464ff, // off gray
+	0x101820ff, // black
 // SYSTEM COLORS
 	0x1f1f1fff, // dark gray / bg darkerer gray
 

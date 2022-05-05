@@ -1,5 +1,6 @@
 
 #include "./color.c"
+#include "./palette.c"
 #include "./sfx.c"
 #include "./tile.c"
 #include "./rom.c"
