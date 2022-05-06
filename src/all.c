@@ -6,18 +6,6 @@
 #include "./rom.c"
 #include "./table.c"
 #include "./ascii_9x16.c"
-
-SDL_Rect comp_space;
-enum comp_targets {
-	rom_table,
-	editor,
-};
-enum comp_targets comp_target;
-#include "./comps/editor.c"
-#include "./comps/palettes.c"
-#include "./comps/colors.c"
-#include "./comps/rom_table.c"
-#include "./comps/status_bar.c"
 #include "./comp.c"
 
 void all_init() {

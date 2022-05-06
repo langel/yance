@@ -13,7 +13,6 @@
 
 tile_struct table_tiles[table_tiles_max];
 
-SDL_Rect table_selection = { 0, 0, 1, 1 };
 
 
 void table_init() {

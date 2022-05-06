@@ -1,7 +1,7 @@
 
 void comps_colors_render() {
-	int swatch_size = 40;
-	swatch_size = (int) ((float) comp_space.w * 0.666f / 16.f);
+
+	int swatch_size = (int) ((float) comp_space.w * 0.666f / 16.f);
 	if (swatch_size < 16) swatch_size = 16;
 
 	// ALL COLORS

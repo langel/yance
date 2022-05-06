@@ -6,6 +6,7 @@ void comps_rom_table_render() {
 
 	// add top/left/bottom margins
 	comp_space.x += 8;
+	comp_space.w -= 8;
 	comp_space.y += 8;
 	comp_space.h -= 16;
 
@@ -29,12 +30,6 @@ void comps_rom_table_render() {
 			table_scroll_pos = rows_total - rows_visible;
 		}
 	}
-	
-	// debugging
-	ascii_color_set(colors[0x41]);
-	char debug[64];
-	sprintf(debug, "scroll: %d  start: %d  visible: %d  total: %d ", table_scroll_pos, rows_start, rows_visible, rows_total);
-	ascii_text_render(debug, 420, 0);
 
 	// RENDER VISIBLE TILES
 	int i = 0;
@@ -94,7 +89,6 @@ void comps_rom_table_render() {
 
 
 void comps_rom_table_update() {
-	int key_repeat = 5;
 	void selection_reset() {
 		table_selection.w = 1;
 		table_selection.h = 1;
