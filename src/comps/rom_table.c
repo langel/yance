@@ -12,8 +12,8 @@ void comps_rom_table_render() {
 		tile_rect.y = 8 + (i >> 4) * tile_size;
 		SDL_RenderCopy(renderer, table_tiles[i].texture, NULL, &tile_rect);
 	}
-	// SHOW SELECTION
 
+	// SHOW SELECTION
 	render_color_set(renderer, colors[0x40]);
 	SDL_RenderDrawRect(renderer, &(SDL_Rect) { 
 		6 + table_selection.x * tile_size,
