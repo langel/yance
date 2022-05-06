@@ -30,6 +30,14 @@ void table_update() {
 	if (keys_ctrl && keys[SDL_SCANCODE_D]) {
 		selection_reset();
 	}
+	if (keys[SDL_SCANCODE_PAGEUP] % key_repeat == 1) {
+		table_selection.y -= 16;
+		if (table_selection.y < 0) table_selection.y = 0;
+	}
+	if (keys[SDL_SCANCODE_PAGEDOWN] % key_repeat == 1) {
+		table_selection.y += 16;
+		if (table_selection.y + table_selection.h > rom_tile_count >> 4) table_selection.y = (rom_tile_count >> 4) - table_selection.h;
+	}
 	if (keys[SDL_SCANCODE_UP] % key_repeat == 1) {
 		if (keys_shift && !keys_ctrl) {
 			if (table_selection.y != 0) {
