@@ -21,7 +21,7 @@ void keyboard_update() {
 		else keys[i] = 0;
 	}
 	keys_alt = keys[SDL_SCANCODE_LALT] || keys[SDL_SCANCODE_RALT];
-	keys_ctrl = keys[SDL_SCANCODE_LCTRL] || keys[SDL_SCANCODE_RCTRL];
+	keys_ctrl = keys[SDL_SCANCODE_LCTRL] || keys[SDL_SCANCODE_RCTRL] || keys[SDL_SCANCODE_LGUI] || keys[SDL_SCANCODE_RGUI];
 	keys_shift = keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT];
 }
 

@@ -1,6 +1,8 @@
 
 void comps_colors_render() {
 	int swatch_size = 40;
+	swatch_size = (int) ((float) comp_space.w * 0.666f / 16.f);
+	if (swatch_size < 16) swatch_size = 16;
 
 	// ALL COLORS
 	int colors_x = comp_space.x + comp_space.w - 8 - swatch_size * 16;
@@ -10,10 +12,12 @@ void comps_colors_render() {
 		int yoff = colors_y + (c >> 4) * swatch_size;
 		render_color_set(renderer, colors[c]);
 		SDL_RenderFillRect(renderer, &(SDL_Rect) { xoff, yoff, swatch_size, swatch_size });
-		ascii_color_set(colors[c] ^ 0xffffff0f);
-		char hex[3];
-		sprintf(hex, "%02X", c);
-		ascii_text_render(hex, 16 + xoff, 4 + yoff);
+		if (swatch_size >= 24) {
+			ascii_color_set(colors[c] ^ 0xffffff0f);
+			char hex[3];
+			sprintf(hex, "%02X", c);
+			ascii_text_render(hex, xoff + swatch_size - 24, yoff + 4);
+		}
 	}
 
 	comps_palettes_render(
