@@ -77,7 +77,9 @@ int main(int argc, char * args[]) {
 		
 		keyboard_update();
 		mouse_update(window_rect);
-		table_update();
+
+		comps_rom_table_update();
+
 		if ((mouse.button_left == 1 || (mouse.button_left && (mouse.rel_x != 0 || mouse.rel_y != 0)))
 		&& mouse.x >= 0 && mouse.x < (int) ((float) texture_w * x_ratio)
 		&& mouse.y >= 0 && mouse.y < (int) ((float) texture_h * y_ratio)) {
