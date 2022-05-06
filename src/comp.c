@@ -1,4 +1,7 @@
 
+void comp_init() {
+	comp_target = rom_table;
+}
 
 
 void comp_render() {

@@ -12,7 +12,7 @@ void comps_status_bar_render() {
 	// text
 	ascii_color_set(colors[0x41]);
 	sprintf(status_text, " TILE COUNT: %5d     ROM SIZE: %7d bytes     NO HEADER     FPS: %7.3f", rom_tile_count, rom_tile_count * 16, 0.f);
-	ascii_text_render(status_text, 0, window_rect.h - 16);
+	ascii_text_render(status_text, 0, status_rect.y);
 	// adjust leftover space
-	comp_space.h -= 16;
+	comp_space.h -= 16; // 16 for height 
 }

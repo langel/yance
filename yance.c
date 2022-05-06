@@ -22,10 +22,17 @@ int main(int argc, char * args[]) {
 	window_init("Yet Another NES CHR Editor");
 	SDL_SetWindowMinimumSize(window, 640, 480);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
+	
+	// color is better than white on bootup
+	render_color_set(renderer, colors[71]);
+	SDL_RenderFillRect(renderer, NULL);
+	SDL_RenderPresent(renderer);
 
 	all_init();
 
 	table_load("guntner.chr");
+	//table_load("milon.nes");
+	//table_load("punchout.nes");
 
 //	SDL_ShowCursor(SDL_DISABLE);
 

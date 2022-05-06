@@ -1,7 +1,7 @@
 
 void comps_editor_render() {
 	// adjust space for padding
-	comp_space.y += 8;
+	comp_space.y += 18;
 	comp_space.h -= 8;
 	comp_space.w -= 8;
 	// calculate comp space ratio
