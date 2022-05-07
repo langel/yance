@@ -37,6 +37,10 @@ void comp_update() {
 		comp_target++;
 		if (comp_target > 1) comp_target = 0;
 	}
+	if (keys_ctrl && keys[SDL_SCANCODE_S] == 1) {	
+		printf("saveing\n");
+		table_save("temp.chr");
+	}
 	if (comp_target == rom_table) comps_rom_table_update();
 	if (comp_target == editor) comps_editor_update();
 }

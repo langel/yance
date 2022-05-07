@@ -13,6 +13,9 @@
 
 tile_struct table_tiles[table_tiles_max];
 
+char * rom_binary;
+int rom_tile_count;
+
 
 
 void table_init() {
@@ -27,18 +30,45 @@ void table_init() {
 
 
 void table_load(char * filename) {
-	rom_load(filename);
+	// actually load
+	FILE * file = fopen(filename, "rb");
+	fseek(file, 0, SEEK_END);
+	int file_length = ftell(file);
+	rom_tile_count = file_length >> 4;
+	fseek(file, 0, SEEK_SET);
+	rom_binary = malloc(file_length);
+	fread(rom_binary, file_length, 1, file);
+	fclose(file);
+	// convert data
 	uint8_t sizteen_bytes[16];
 	for (int t = 0; t < rom_tile_count; t++) {
 		for (int i = 0; i < 16; i++) {
 			sizteen_bytes[i] = rom_binary[(t << 4) + i];
 		}
 		_2bpp_to_tile(sizteen_bytes, &table_tiles[t]);
-		/*
-		_64px_to_surface(table_tiles[t], pixels, 
-			32 + (t * 8) % 128 + (t % 16),
-			32 + (t >> 4) * 8 + (t >> 4),
-			128);
-			*/
 	}
+	// cleanup
+	free(rom_binary);
+}
+
+void table_save(char * filename) {
+	// setup
+	int size = rom_tile_count * 16;
+	rom_binary = malloc(size);
+	printf("malloc: %d\n", rom_tile_count * 16);
+	// convert data
+	uint8_t sizteen_bytes[16];
+	for (int t = 0; t < rom_tile_count; t++) {
+		_tile_to_2bpp(&table_tiles[t], sizteen_bytes);
+		for (int i = 0; i < 16; i++) {
+			rom_binary[(t << 4) + i] = sizteen_bytes[i]; 
+		}
+	}
+	// save
+	FILE * file = fopen(filename, "wb");
+	printf(" %d byte\n", size);
+	fwrite(rom_binary, size, 1, file); 
+	fclose(file);
+	// cleanup
+	free(rom_binary);
 }

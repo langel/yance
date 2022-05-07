@@ -39,9 +39,12 @@ void _2bpp_to_tile(uint8_t data[16], tile_struct * tile) {
 	tile_update_texture(tile);
 }
 
-void _64px_to_surface(tile_struct tile, uint32_t * surface, int x, int y, int w) {
-	int offset = x + y * w;
+void _tile_to_2bpp(tile_struct * tile, uint8_t data[16]) {
+	for (int i = 0; i < 16; i++) data[i] = 0;
 	for (int i = 0; i < 64; i++) {
-		surface[offset + (i & 7) + (i >> 3) * w] = colors[4 + 16 * tile.values[i]];
+		uint8_t bit_shifter = (7 - (i % 8));
+		uint8_t byte = i >> 3;
+		data[byte] |= (tile->values[i] & (uint8_t) 1) << bit_shifter;
+		data[byte+8] |= ((tile->values[i] & (uint8_t) 2) >> 1) << bit_shifter;
 	}
 }
