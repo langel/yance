@@ -168,4 +168,19 @@ void comps_rom_table_update() {
 			}
 		}
 	}
+
+	// make sure editor_selection fits within table_selection
+	int diff;
+	diff = (table_selection.w << 3) - (editor_selection.x + editor_selection.w);
+	if (diff < 0) editor_selection.x += diff;
+	if (editor_selection.x < 0) {
+		editor_selection.w += editor_selection.x;
+		editor_selection.x = 0;
+	}
+	diff = (table_selection.h << 3) - (editor_selection.y + editor_selection.h);
+	if (diff < 0) editor_selection.y += diff;
+	if (editor_selection.y < 0) {
+		editor_selection.h += editor_selection.y;
+		editor_selection.y = 0;
+	}
 }

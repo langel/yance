@@ -62,10 +62,16 @@ void comps_editor_render() {
 	render_color_set(renderer, colors[0x40]);
 	float pxl_ratio = ratio / 8.f;
 	SDL_RenderDrawRect(renderer, &(SDL_Rect) { 
-		x_off + (int) ((float) editor_selection.x * pxl_ratio),
+		x_off + (int) ((float) editor_selection.x * pxl_ratio) - 1,
 		y_off + (int) ((float) editor_selection.y * pxl_ratio),
-		(int) ((float) editor_selection.w * pxl_ratio),
+		(int) ((float) editor_selection.w * pxl_ratio) + 2,
 		(int) ((float) editor_selection.h * pxl_ratio),
+	});
+	SDL_RenderDrawRect(renderer, &(SDL_Rect) { 
+		x_off + (int) ((float) editor_selection.x * pxl_ratio),
+		y_off + (int) ((float) editor_selection.y * pxl_ratio) - 1,
+		(int) ((float) editor_selection.w * pxl_ratio),
+		(int) ((float) editor_selection.h * pxl_ratio) + 2,
 	});
 
 }
