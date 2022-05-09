@@ -38,14 +38,8 @@ int main(int argc, char * args[]) {
 
 //	SDL_ShowCursor(SDL_DISABLE);
 
-	time_t fps_start = time(NULL);
-	time_t fps_end;
-	uint32_t fps_counter;
-	float fps_current;
-
-	uint32_t frame_counter;
 	while (running) {
-		frame_counter++;
+		fps_update();
 
 		// clear background
 		render_color_set(renderer, colors[71]);
@@ -53,10 +47,6 @@ int main(int argc, char * args[]) {
 
 		comp_render();
 
-		// FPS
-		fps_end = time(NULL);
-		fps_counter++;
-		fps_current = 1.f / ((float) (fps_end - fps_start) / (float) fps_counter);
 		// XXX need a dependable FPS throttler
 		SDL_RenderPresent(renderer);
 
