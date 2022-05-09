@@ -46,24 +46,18 @@ void comp_update() {
 		SDL_OpenURL("https://github.com/langel/yance");
 	}
 	if (keys_ctrl && keys[SDL_SCANCODE_C] == 1) {
-		unsigned char allchars[257] = {};
-		uint8_t chars[257] = {};
-		for (uint8_t i = 20; i < 100; i++) {
-			chars[i] = i;
-			printf("%c", i);
-		}
-		printf("\n");
-		memcpy(allchars, chars, 256);
-		printf("%s\n", allchars);
-		printf("%d\n", strlen(allchars));
-		printf("stashed in clipboard: %s\n", allchars);
-		SDL_SetClipboardText(allchars);
+		clipboard_pixels_copy((SDL_Rect) { 0, 0, 8, 8 });
 	}
 	if (keys_ctrl && keys[SDL_SCANCODE_V] == 1) {
-		char * clipboard = SDL_GetClipboardText();
-		printf("%s\n", clipboard);
-		printf("%d\n", strlen(clipboard));
-		SDL_free(clipboard);
+		if (comp_target == rom_table) {
+			clipboard_pixels_paste((SDL_Rect) {
+				table_selection.x << 3, 
+				table_selection.y << 3,
+				0, 0 });
+		}
+		if (comp_target == editor) {
+			clipboard_pixels_paste(editor_selection);
+		}
 	}
 	if (comp_target == rom_table) comps_rom_table_update();
 	if (comp_target == editor) comps_editor_update();

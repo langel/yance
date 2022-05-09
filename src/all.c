@@ -5,6 +5,7 @@
 #include "./tile.c"
 #include "./table.c"
 #include "./ascii_9x16.c"
+#include "./clipboard.c"
 #include "./comp.c"
 
 void all_init() {

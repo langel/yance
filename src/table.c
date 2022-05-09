@@ -72,3 +72,18 @@ void table_save(char * filename) {
 	// cleanup
 	free(rom_binary);
 }
+
+uint8_t table_pixel_get_value(int x, int y) {
+	int tile = (x >> 3) + ((y >> 3) << 4);
+	int pos = (x % 8) + ((y % 8) << 3);
+	return table_tiles[tile].values[pos];
+}
+
+void table_pixel_set_value(int x, int y, int value) {
+	int tile = (x >> 3) + ((y >> 3) << 4);
+	int pos = (x % 8) + ((y % 8) << 3);
+	tile_update_pixel(&table_tiles[tile], pos, (uint8_t) value);
+}
+	
+
+
