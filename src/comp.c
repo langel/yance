@@ -46,7 +46,22 @@ void comp_update() {
 		SDL_OpenURL("https://github.com/langel/yance");
 	}
 	if (keys_ctrl && keys[SDL_SCANCODE_C] == 1) {
-		clipboard_pixels_copy((SDL_Rect) { 0, 0, 8, 8 });
+		if (comp_target == rom_table) {
+			clipboard_pixels_copy((SDL_Rect) { 
+				table_selection.x << 3,
+				table_selection.y << 3,
+				table_selection.w << 3,
+				table_selection.h << 3,
+			});
+		}
+		if (comp_target == editor) {
+			clipboard_pixels_copy((SDL_Rect) {
+				(table_selection.x << 3) + editor_selection.x,
+				(table_selection.y << 3) + editor_selection.y,
+				editor_selection.w,
+				editor_selection.h,
+			});
+		}
 	}
 	if (keys_ctrl && keys[SDL_SCANCODE_V] == 1) {
 		if (comp_target == rom_table) {
@@ -56,7 +71,10 @@ void comp_update() {
 				0, 0 });
 		}
 		if (comp_target == editor) {
-			clipboard_pixels_paste(editor_selection);
+			clipboard_pixels_paste((SDL_Rect) {
+				(table_selection.x << 3) + editor_selection.x,
+				(table_selection.y << 3) + editor_selection.y,
+				0, 0 });
 		}
 	}
 	if (comp_target == rom_table) comps_rom_table_update();

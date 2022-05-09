@@ -45,7 +45,7 @@ void clipboard_pixels_copy(SDL_Rect src) {
 	// pixel data in 4bit base16
 	for (int y = 0; y < src.h; y++) {
 		for (int x = 0; x < src.w; x++) {
-			*pout++ = hex[table_pixel_get_value(x, y) & 0xF];
+			*pout++ = hex[table_pixel_get_value(x + src.x, y + src.y) & 0xF];
 		}
 	}
 	// null terminator
