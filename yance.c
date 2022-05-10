@@ -30,7 +30,7 @@ int main(int argc, char * args[]) {
 	SDL_RenderFillRect(renderer, NULL);
 	SDL_RenderPresent(renderer);
 
-	all_init();
+	src_all_init();
 
 	table_load("guntner.chr");
 	//table_load("milon.nes");

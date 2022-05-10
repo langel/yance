@@ -8,7 +8,7 @@
 #include "./clipboard.c"
 #include "./comp.c"
 
-void all_init() {
+void src_all_init() {
 	audio_init(32000, 2, 1024, AUDIO_F32SYS, &audio_callback);
 	ascii_init();
 	keyboard_init();

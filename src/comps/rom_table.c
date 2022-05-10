@@ -66,8 +66,23 @@ void comps_rom_table_render() {
 	}
 
 
-	// SHOW SELECTION
+	// SHOW CURSOR
 	render_color_set(renderer, colors[0x40]);
+	SDL_RenderDrawRect(renderer, &(SDL_Rect) { 
+		6 + table_cursor.x * tile_size,
+		7 + (table_cursor.y - table_scroll_pos) * tile_size,
+		table_cursor.w * tile_size + 4,
+		table_cursor.h * tile_size + 2,
+	});
+	SDL_RenderDrawRect(renderer, &(SDL_Rect) { 
+		7 + table_cursor.x * tile_size,
+		6 + (table_cursor.y - table_scroll_pos) * tile_size,
+		table_cursor.w * tile_size + 2,
+		table_cursor.h * tile_size + 4,
+	});
+
+	// SHOW SELECTION
+	render_color_set(renderer, colors[0x41]);
 	SDL_RenderDrawRect(renderer, &(SDL_Rect) { 
 		6 + table_selection.x * tile_size,
 		7 + (table_selection.y - table_scroll_pos) * tile_size,

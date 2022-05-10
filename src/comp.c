@@ -6,7 +6,9 @@ enum comp_targets {
 };
 enum comp_targets comp_target;
 
+SDL_Rect table_cursor = { 0, 0, 1, 1 };
 SDL_Rect table_selection = { 0, 0, 1, 1 };
+SDL_Rect editor_cursor = { 0, 0, 1, 1 };
 SDL_Rect editor_selection = { 0, 0, 1, 1 };
 
 
