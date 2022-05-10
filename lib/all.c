@@ -6,6 +6,11 @@
 #include "./mouse.c"
 
 
+void lib_event(SDL_Event event) {
+	window_event(event);
+	mouse_event(event);
+}
+
 void lib_update() {
 	fps_update();
 	keyboard_update();

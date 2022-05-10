@@ -26,6 +26,10 @@ void comp_init() {
 
 
 void comp_render() {
+	// clear background
+	render_color_set(renderer, colors[71]);
+	SDL_RenderFillRect(renderer, NULL);
+	// setup comp space and render comps
 	comp_space = (SDL_Rect) { 0, 0, window_rect.w, window_rect.h };
 	comps_status_bar_render();
 	comps_rom_table_render();

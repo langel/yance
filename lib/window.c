@@ -7,7 +7,7 @@ void window_init(char * name) {
 	window = SDL_CreateWindow(name, window_rect.x, window_rect.y, window_rect.w, window_rect.h, SDL_WINDOW_RESIZABLE);
 }
 
-void window_event_process(SDL_Event event) {
+void window_event(SDL_Event event) {
 	if (event.type == SDL_WINDOWEVENT) {
 		if (event.window.event == SDL_WINDOWEVENT_MOVED) {
 			window_rect.x = event.window.data1;

@@ -9,12 +9,21 @@ typedef struct {
 	int button_right;
 	int button_x1;
 	int button_x2;
+	int wheel_x;
+	int wheel_y;
 } mouse_struct;
 
 mouse_struct mouse;
 
 void mouse_init() {
 	mouse = (mouse_struct) { 0 };
+}
+
+void mouse_event(SDL_Event event) {
+	if (event.type == SDL_MOUSEWHEEL) {
+		mouse.wheel_x = event.wheel.x;
+		mouse.wheel_y = event.wheel.y;
+	}
 }
 
 void mouse_update() {

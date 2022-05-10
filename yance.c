@@ -40,10 +40,6 @@ int main(int argc, char * args[]) {
 
 	while (running) {
 
-		// clear background
-		render_color_set(renderer, colors[71]);
-		SDL_RenderFillRect(renderer, NULL);
-
 		comp_render();
 
 		// XXX need a dependable FPS throttler
@@ -56,7 +52,7 @@ int main(int argc, char * args[]) {
 					running = 0;
 					break;
 			}
-			window_event_process(event);
+			lib_event(event);
 		}
 
 		lib_update();
