@@ -39,7 +39,6 @@ int main(int argc, char * args[]) {
 //	SDL_ShowCursor(SDL_DISABLE);
 
 	while (running) {
-		fps_update();
 
 		// clear background
 		render_color_set(renderer, colors[71]);
@@ -59,26 +58,16 @@ int main(int argc, char * args[]) {
 			}
 			window_event_process(event);
 		}
-		keyboard_update();
-		mouse_update(window_rect);
 
+		lib_update();
 		comp_update();
 
 		float x_ratio = (float) window_rect.w / (float) texture_w;
 		float y_ratio = (float) window_rect.h / (float) texture_h;
-		if ((mouse.button_left == 1 || (mouse.button_left && (mouse.rel_x != 0 || mouse.rel_y != 0)))
+		if (window_has_focus
+		&& (mouse.button_left == 1 || (mouse.button_left && (mouse.rel_x != 0 || mouse.rel_y != 0)))
 		&& mouse.x >= 0 && mouse.x < (int) ((float) texture_w * x_ratio)
 		&& mouse.y >= 0 && mouse.y < (int) ((float) texture_h * y_ratio)) {
-			/*
-			int pixel = (int) ((float) mouse.x / x_ratio) + texture_w * (int) ((float) mouse.y / y_ratio);
-			pixels[pixel] = paint_color;
-			pixel++;
-			pixels[pixel] = paint_color;
-			pixel += texture_w;
-			pixels[pixel] = paint_color;
-			pixel--;
-			pixels[pixel] = paint_color;
-			*/
 			sfx_plot();
 		}
 

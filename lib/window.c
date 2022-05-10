@@ -8,8 +8,6 @@ void window_init(char * name) {
 }
 
 void window_event_process(SDL_Event event) {
-	int flags = SDL_GetWindowFlags(window);
-	window_has_focus = flags & SDL_WINDOW_INPUT_FOCUS;
 	if (event.type == SDL_WINDOWEVENT) {
 		if (event.window.event == SDL_WINDOWEVENT_MOVED) {
 			window_rect.x = event.window.data1;
@@ -20,4 +18,9 @@ void window_event_process(SDL_Event event) {
 			window_rect.h = event.window.data2;
 		}
 	}
+}
+
+void window_update() {
+	int flags = SDL_GetWindowFlags(window);
+	window_has_focus = flags & SDL_WINDOW_INPUT_FOCUS;
 }

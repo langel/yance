@@ -5,8 +5,8 @@ void comps_colors_render() {
 	if (swatch_size < 16) swatch_size = 16;
 
 	// ALL COLORS
-	int colors_x = comp_space.x + comp_space.w - 8 - swatch_size * 16;
-	int colors_y = comp_space.h - 8 - swatch_size * 4;
+	int colors_x = comp_space.x + comp_space.w - swatch_size * 16 - 8;
+	int colors_y = comp_space.y + comp_space.h - swatch_size * 4;
 	for (int c = 0; c < 64; c++) {
 		int xoff = colors_x + (c % 16) * swatch_size;
 		int yoff = colors_y + (c >> 4) * swatch_size;

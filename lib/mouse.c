@@ -17,12 +17,12 @@ void mouse_init() {
 	mouse = (mouse_struct) { 0 };
 }
 
-void mouse_update(SDL_Rect window) {
+void mouse_update() {
 	int prev_x = mouse.x;
 	int prev_y = mouse.y;
 	uint32_t buttons = SDL_GetGlobalMouseState(&mouse.x, &mouse.y);
-	mouse.x -= window.x;
-	mouse.y -= window.y;
+	mouse.x -= window_rect.x;
+	mouse.y -= window_rect.y;
 	mouse.rel_x = mouse.x - prev_x;
 	mouse.rel_y = mouse.y - prev_y;
 	if (buttons & SDL_BUTTON_LMASK) mouse.button_left++;
