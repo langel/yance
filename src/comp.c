@@ -37,23 +37,41 @@ void comp_render() {
 	comps_editor_render();
 }
 
+
 void comp_update() {
+
+	// quit
 	if (keys[SDL_SCANCODE_ESCAPE]) running = 0;
+
+	// tab around
 	if (keys[SDL_SCANCODE_TAB] == 1) {
 		comp_target++;
 		if (comp_target > 1) comp_target = 0;
 	}
+
+	// save
 	if (keys_ctrl && keys[SDL_SCANCODE_S] == 1) {	
 		printf("saveing\n");
 		table_save("temp.chr");
 	}
-	if (keys_ctrl && keys[SDL_SCANCODE_1] == 1) {
+
+	// open github
+	if (keys_ctrl && keys[SDL_SCANCODE_G] == 1) {
 		printf("opening source\n");
 		SDL_OpenURL("https://github.com/langel/yance");
 	}
-	if (keys_ctrl && keys[SDL_SCANCODE_Z] == 1) {
+
+	// undo
+	if (keys_ctrl && !keys_shift && keys[SDL_SCANCODE_Z] == 1) {
 		undo_rewind();
 	}
+
+	// redo
+	if (keys_ctrl && keys_shift && keys[SDL_SCANCODE_Z] == 1) {
+		undo_redo();
+	}
+
+	// copy
 	if (keys_ctrl && keys[SDL_SCANCODE_C] == 1) {
 		if (comp_target == rom_table) {
 			clipboard_pixels_copy((SDL_Rect) { 
@@ -72,13 +90,14 @@ void comp_update() {
 			});
 		}
 	}
+
+	// paste
 	if (keys_ctrl && keys[SDL_SCANCODE_V] == 1) {
 		if (comp_target == rom_table) {
 			clipboard_pixels_paste((SDL_Rect) {
 				table_selection.x << 3, 
 				table_selection.y << 3,
 				0, 0 });
-			printf("done pasting\n");
 		}
 		if (comp_target == editor) {
 			clipboard_pixels_paste((SDL_Rect) {
@@ -87,6 +106,26 @@ void comp_update() {
 				0, 0 });
 		}
 	}
+
+	// handle palette stuff
+	if (keys_ctrl) {
+		if (keys[SDL_SCANCODE_1]) palette_current_set(0);
+		if (keys[SDL_SCANCODE_2]) palette_current_set(1);
+		if (keys[SDL_SCANCODE_3]) palette_current_set(2);
+		if (keys[SDL_SCANCODE_4]) palette_current_set(3);
+		if (keys[SDL_SCANCODE_5]) palette_current_set(4);
+		if (keys[SDL_SCANCODE_6]) palette_current_set(5);
+		if (keys[SDL_SCANCODE_7]) palette_current_set(6);
+		if (keys[SDL_SCANCODE_8]) palette_current_set(7);
+	}
+	else {
+		if (keys[SDL_SCANCODE_1]) palette_current_color_set(0);
+		if (keys[SDL_SCANCODE_2]) palette_current_color_set(1);
+		if (keys[SDL_SCANCODE_3]) palette_current_color_set(2);
+		if (keys[SDL_SCANCODE_4]) palette_current_color_set(3);
+	}
+
+	// handle other comps
 	if (comp_target == rom_table) comps_rom_table_update();
 	if (comp_target == editor) comps_editor_update();
 }

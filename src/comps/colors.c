@@ -19,7 +19,20 @@ void comps_colors_render() {
 			ascii_text_render(hex, xoff + swatch_size - 24, yoff + 4);
 		}
 	}
+	// highlight current color
+	render_color_set(renderer, (palette_current_color_id < 0x20) ? colors[0x41] : colors[0x45]);
+	int x_off = colors_x + (palette_current_color_id % 16) * swatch_size;
+	int y_off = colors_y + (palette_current_color_id >> 4) * swatch_size;
+	SDL_RenderDrawRect(renderer, &(SDL_Rect) { 
+		x_off - 1, y_off,
+		swatch_size + 2, swatch_size
+	});
+	SDL_RenderDrawRect(renderer, &(SDL_Rect) { 
+		x_off, y_off - 1,
+		swatch_size, swatch_size + 2
+	});
 
+	// draw all palette swatches
 	comps_palettes_render(
 		comp_space.x + (colors_x - comp_space.x) / 2, 
 		colors_y + (comp_space.h - colors_y) / 2);

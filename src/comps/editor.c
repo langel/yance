@@ -76,22 +76,18 @@ void comps_editor_render() {
 
 }
 
-void editor_paint(uint8_t value) {
+void editor_paint() {
 	for (int x = 0; x < editor_selection.w; x++) {
 		for (int y = 0; y < editor_selection.h; y++) {
 			int t = ((editor_selection.x + x) >> 3) + table_selection.x + 
 				((((editor_selection.y + y) >> 3) + table_selection.y) << 4);
 			int pos = (editor_selection.x + x) % 8 + (((editor_selection.y + y) % 8) << 3);
-			tile_update_pixel(&table_tiles[t], pos, value);
+			tile_update_pixel(&table_tiles[t], pos, palette_current_color);
 		}
 	}
 }
 
 void comps_editor_update() {
-	if (keys[SDL_SCANCODE_1]) editor_paint(0);
-	if (keys[SDL_SCANCODE_2]) editor_paint(1);
-	if (keys[SDL_SCANCODE_3]) editor_paint(2);
-	if (keys[SDL_SCANCODE_4]) editor_paint(3);
 	void selection_reset() {
 		editor_selection.w = 1;
 		editor_selection.h = 1;

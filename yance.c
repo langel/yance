@@ -20,7 +20,7 @@ int main(int argc, char * args[]) {
 	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO);
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 
-	window_rect = (SDL_Rect) { 100, 200, texture_w*2, texture_h*2 };
+	window_rect = (SDL_Rect) { 32, 32, texture_w*2, texture_h*2 };
 	window_init("Yet Another NES CHR Editor");
 	SDL_SetWindowMinimumSize(window, 640, 480);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);

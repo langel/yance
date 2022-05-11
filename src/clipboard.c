@@ -24,14 +24,14 @@
 */
 
 void clipboard_pixels_copy(SDL_Rect src) {
-	pixel_struct pxl;
+	pixel_struct pxl = pixel_new();
 	pxl.rect = src;
 	SDL_SetClipboardText(pixel_state_capture(pxl));
 }
 
 
 void clipboard_pixels_paste(SDL_Rect dest) {
-	pixel_struct pxl;
+	pixel_struct pxl = pixel_new();
 	char * string = SDL_GetClipboardText();
 	int status = pixel_state_reconstruct(&pxl, string);
 	SDL_free(string);
@@ -40,12 +40,10 @@ void clipboard_pixels_paste(SDL_Rect dest) {
 	pxl.rect.y = dest.y;
 	
 	// store undo information
-	pixel_struct pxl_undo;
+	pixel_struct pxl_undo = pixel_new();
 	pxl_undo.rect = pxl.rect;
 	undo_record(pixel_state_capture(pxl_undo));
 
 	// plot clipboard to rom
-	printf("plot\n");
 	pixel_state_plot(pxl);
-	printf("done plotting\n");
 }
