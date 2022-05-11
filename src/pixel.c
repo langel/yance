@@ -49,7 +49,7 @@ const char * pixel_state_capture(pixel_struct pxl) {
 	*pout++ = hex[((uint16_t) pxl.rect.h >> 4) & 0xf];
 	*pout++ = hex[(uint16_t) pxl.rect.h & 0xf];
 	// pixel data from rom data
-	free(pxl.values);
+	//free(pxl.values);
 	pxl.values = malloc(size);
 	for (int i = 0; i < size; i++) {
 		pxl.values[i] = table_pixel_get_value(pxl.rect.x + (i % pxl.rect.w), pxl.rect.y + (i / pxl.rect.w));
@@ -99,7 +99,7 @@ int pixel_state_reconstruct(pixel_struct * pxl, char * str) {
 	pxl->size = pxl->rect.w * pxl->rect.h;
 	// pixel data in 4bit base16
 	buff[1] = '\0';
-	free(pxl->values);
+	//free(pxl->values);
 	pxl->values = malloc(pxl->size);
 	for (int i = 0; i < pxl->size; i++) {
 		memcpy(buff, &str[0x12 + i], 1);
