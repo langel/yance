@@ -16,6 +16,7 @@ void tile_update_texture(tile_struct * tile) {
 void tile_update_pixel(tile_struct * tile, int pos, int value) {
 	tile->values[pos] = value;
 	tile->color_data[pos] = colors[palette[0][value]];
+	// XXX need a queueing system so texture is updated max once per frame
 	tile_update_texture(tile);
 }
 

@@ -5,6 +5,8 @@
 #include "./tile.c"
 #include "./table.c"
 #include "./ascii_9x16.c"
+#include "./pixel.c"
+#include "./undo.c"
 #include "./clipboard.c"
 #include "./comp.c"
 
@@ -15,4 +17,5 @@ void src_all_init() {
 	mouse_init();
 	comp_init();
 	table_init();
+	undo_init();
 }

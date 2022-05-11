@@ -51,6 +51,9 @@ void comp_update() {
 		printf("opening source\n");
 		SDL_OpenURL("https://github.com/langel/yance");
 	}
+	if (keys_ctrl && keys[SDL_SCANCODE_Z] == 1) {
+		undo_rewind();
+	}
 	if (keys_ctrl && keys[SDL_SCANCODE_C] == 1) {
 		if (comp_target == rom_table) {
 			clipboard_pixels_copy((SDL_Rect) { 
@@ -75,6 +78,7 @@ void comp_update() {
 				table_selection.x << 3, 
 				table_selection.y << 3,
 				0, 0 });
+			printf("done pasting\n");
 		}
 		if (comp_target == editor) {
 			clipboard_pixels_paste((SDL_Rect) {

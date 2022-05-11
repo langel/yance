@@ -24,69 +24,28 @@
 */
 
 void clipboard_pixels_copy(SDL_Rect src) {
-
-	uint16_t size = src.w * src.h;
-	printf("%d\n", size);
-
-	char string[0xc + size + 1];
-	char * pout = string;
-	const char * hex = "0123456789abcdef";
-	// identifier
-	strcpy(string, "YANCEp");
-	pout += 6;
-	// total pixels in 16bit base16
-	*pout++ = hex[(size >> 12) & 0xf];
-	*pout++ = hex[(size >> 8) & 0xf];
-	*pout++ = hex[(size >> 4) & 0xf];
-	*pout++ = hex[size & 0xf];
-	// width of selection in 8bit base16
-	*pout++ = hex[((uint8_t) src.w >> 4) & 0xf];
-	*pout++ = hex[(uint8_t) src.w & 0xf];
-	// pixel data in 4bit base16
-	for (int y = 0; y < src.h; y++) {
-		for (int x = 0; x < src.w; x++) {
-			*pout++ = hex[table_pixel_get_value(x + src.x, y + src.y) & 0xF];
-		}
-	}
-	// null terminator
-	*pout++ = '\0';
-	printf("%s\n", string);
-	SDL_SetClipboardText((const char *) &string);
+	pixel_struct pxl;
+	pxl.rect = src;
+	SDL_SetClipboardText(pixel_state_capture(pxl));
 }
 
 
 void clipboard_pixels_paste(SDL_Rect dest) {
+	pixel_struct pxl;
 	char * string = SDL_GetClipboardText();
-	// identifier
-	const char * ident = "YANCEp";
-	for (int i = 0; i < strlen(ident); i++) {
-		if (string[i] != ident[i]) return;
-	}
-	// total pixels in 16bit base16
-	char buff[5];
-	memcpy(buff, &string[0x6], 4);
-	buff[4] = '\0';
-	int size = (int) strtol(buff, NULL, 16);
-	printf("size: %d\n", size);
-	// width of selection in 8bit base16
-	memcpy(buff, &string[0xa], 2);
-	buff[2] = '\0';
-	int width = (int) strtol(buff, NULL, 16);
-	printf("width: %d\n", width);
-	// pixel data in 4bit base16
-	int rows = size / width;
-	buff[1] = '\0';
-	int i = 0;
-	for (int y = 0; y < rows; y++) {
-		for (int x = 0; x < width; x++) {
-			memcpy(buff, &string[0xc + i], 1);
-			int value = (int) strtol(buff, NULL, 16);
-			table_pixel_set_value(x + dest.x, y + dest.y, value);
-			i++;
-		}
-	}
-
-	printf("%s\n", string);
-	printf("%d\n", strlen(string));
+	int status = pixel_state_reconstruct(&pxl, string);
 	SDL_free(string);
+	if (status > 0) return;
+	pxl.rect.x = dest.x;
+	pxl.rect.y = dest.y;
+	
+	// store undo information
+	pixel_struct pxl_undo;
+	pxl_undo.rect = pxl.rect;
+	undo_record(pixel_state_capture(pxl_undo));
+
+	// plot clipboard to rom
+	printf("plot\n");
+	pixel_state_plot(pxl);
+	printf("done plotting\n");
 }
