@@ -2,6 +2,7 @@
 #include "./color.c"
 #include "./palette.c"
 #include "./sfx.c"
+#include "./file.c"
 #include "./tile.c"
 #include "./table.c"
 #include "./ascii_9x16.c"
@@ -18,4 +19,14 @@ void src_all_init() {
 	comp_init();
 	table_init();
 	undo_init();
+}
+
+void src_event(SDL_Event event) {
+	if (event.type == SDL_DROPFILE) {
+		char * filename = event.drop.file;
+		printf("%s\n", filename);
+		table_load(filename);
+		SDL_free(filename); 
+		SDL_RaiseWindow(window);
+	}
 }

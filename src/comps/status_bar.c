@@ -11,7 +11,7 @@ void comps_status_bar_render() {
 	SDL_RenderFillRect(renderer, &status_rect);
 	// text
 	ascii_color_set(colors[0x41]);
-	sprintf(status_text, " TILE COUNT: %5d     ROM SIZE: %7d bytes     NO HEADER     FPS: %7.3f", rom_tile_count, rom_tile_count * 16, fps_avg_display);
+	sprintf(status_text, " TILE COUNT: %5d     ROM SIZE: %7d bytes     %s     FPS: %7.3f", rom_tile_count, file_chr_rom_size, header_str, fps_avg_display);
 	ascii_text_render(status_text, 0, status_rect.y);
 	// adjust leftover space
 	comp_space.h -= 16; // 16 for height 

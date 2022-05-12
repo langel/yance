@@ -6,10 +6,10 @@
 // 16 x 2048 tiles or 128 x 16384 pixels  
 // x 32bit color = 8,388,608 of GPU RAM
 
-// XXX currently space for 256kb rom + header
-//#define table_tiles_max 16385
+// space for 256kb rom + header
+#define table_tiles_max 16385
 
-#define table_tiles_max 2048 // 4 banks
+//#define table_tiles_max 2048 // 4 banks
 
 tile_struct table_tiles[table_tiles_max];
 
@@ -40,14 +40,20 @@ void table_update_palette() {
 
 
 void table_load(char * filename) {
+	// checakout header
+	file_load(filename);
+	free(window_title);
+	window_title = calloc(strlen(app_title) + 3 + strlen(filename + 1), 1);
+	strcat(window_title, app_title);
+	strcat(window_title, " - ");
+	strcat(window_title, filename);
+	SDL_SetWindowTitle(window, window_title);
 	// actually load
 	FILE * file = fopen(filename, "rb");
-	fseek(file, 0, SEEK_END);
-	int file_length = ftell(file);
-	rom_tile_count = file_length >> 4;
-	fseek(file, 0, SEEK_SET);
-	rom_binary = malloc(file_length);
-	fread(rom_binary, file_length, 1, file);
+	rom_tile_count = file_chr_rom_size >> 4;
+	fseek(file, file_chr_rom_start, SEEK_SET);
+	rom_binary = malloc(file_chr_rom_size);
+	fread(rom_binary, file_chr_rom_size, 1, file);
 	fclose(file);
 	// convert data
 	uint8_t sizteen_bytes[16];

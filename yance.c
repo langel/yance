@@ -10,6 +10,8 @@ int texture_h = 360;
 int key_repeat = 5;
 SDL_Event event;
 SDL_Renderer * renderer;
+char * app_title = "Yet Another NES CHR Editor";
+char * window_title = NULL;
 
 #include "lib/all.c"
 #include "src/all.c"
@@ -20,8 +22,8 @@ int main(int argc, char * args[]) {
 	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO);
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 
-	window_rect = (SDL_Rect) { 32, 32, texture_w*2, texture_h*2 };
-	window_init("Yet Another NES CHR Editor");
+	window_rect = (SDL_Rect) { 32, 64, texture_w*2, texture_h*2 };
+	window_init(window_title);
 	SDL_SetWindowMinimumSize(window, 640, 480);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	
@@ -53,6 +55,7 @@ int main(int argc, char * args[]) {
 					break;
 			}
 			lib_event(event);
+			src_event(event);
 		}
 
 		lib_update();
