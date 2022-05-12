@@ -14,9 +14,8 @@ void tile_update_texture(tile_struct * tile) {
 }
 
 void tile_update_pixel(tile_struct * tile, int pos, int value) {
-	value = palette_color_get(palette_current, value);
 	tile->values[pos] = value;
-	tile->color_data[pos] = colors[palette[palette_current][value]];
+	tile->color_data[pos] = palette_rgb_get(palette_current, value);
 	// XXX need a queueing system so texture is updated max once per frame
 	tile_update_texture(tile);
 }
@@ -34,7 +33,7 @@ void _2bpp_to_tile(uint8_t data[16], tile_struct * tile) {
 			uint8_t color = (lo & b) ? 1 : 0;
 			color += (hi & b) ? 2 : 0;
 			tile->values[pos] = color;
-			tile->color_data[pos] = colors[palette[tile->pal][color]];
+			tile->color_data[pos] = palette_rgb_get(tile->pal, color);
 			pos++;
 		}
 	}
