@@ -117,6 +117,10 @@ void comp_update() {
 		if (keys[SDL_SCANCODE_6]) palette_current_set(5);
 		if (keys[SDL_SCANCODE_7]) palette_current_set(6);
 		if (keys[SDL_SCANCODE_8]) palette_current_set(7);
+		// XXX updating all tile pixel data
+		//     and textures every frame might
+		//     not be the most optimized
+		table_update_palette();
 	}
 	else {
 		if (keys[SDL_SCANCODE_1]) palette_current_color_set(0);

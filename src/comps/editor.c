@@ -92,6 +92,19 @@ void comps_editor_update() {
 		editor_selection.w = 1;
 		editor_selection.h = 1;
 	}
+	if (keys[SDL_SCANCODE_SPACE]) {
+		if (keys[SDL_SCANCODE_SPACE] == 1) {
+			pixel_struct pxl = pixel_new();
+			pxl.rect = (SDL_Rect) {
+				table_selection.x << 3,
+				table_selection.y << 3,
+				table_selection.w << 3,
+				table_selection.h << 3,
+			};
+			undo_record(pixel_state_capture(pxl));
+		}
+		editor_paint();
+	}
 	if (keys_ctrl && keys[SDL_SCANCODE_D]) {
 		selection_reset();
 	}

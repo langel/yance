@@ -25,3 +25,8 @@ void palette_current_color_set(int i) {
 	palette_current_color = i;
 	palette_current_color_id = palette[palette_current][palette_current_color];
 }
+
+int palette_color_get(int pal, int col) {
+	if (col == 0) return palette[0][0];
+	return palette[pal][col];
+}

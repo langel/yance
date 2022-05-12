@@ -29,6 +29,16 @@ void table_init() {
 }
 
 
+void table_update_palette() {
+	for (int t = 0; t < table_tiles_max; t++) {
+		for (int i = 0; i < 64; i++) {
+			table_tiles[t].color_data[i] = colors[palette[palette_current][table_tiles[t].values[i]]];
+		}
+		tile_update_texture(&table_tiles[t]);
+	}
+}
+
+
 void table_load(char * filename) {
 	// actually load
 	FILE * file = fopen(filename, "rb");
