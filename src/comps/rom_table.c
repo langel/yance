@@ -67,19 +67,21 @@ void comps_rom_table_render() {
 
 
 	// SHOW CURSOR
-	render_color_set(renderer, colors[0x40]);
-	SDL_RenderDrawRect(renderer, &(SDL_Rect) { 
-		6 + table_cursor.x * tile_size,
-		7 + (table_cursor.y - table_scroll_pos) * tile_size,
-		table_cursor.w * tile_size + 4,
-		table_cursor.h * tile_size + 2,
-	});
-	SDL_RenderDrawRect(renderer, &(SDL_Rect) { 
-		7 + table_cursor.x * tile_size,
-		6 + (table_cursor.y - table_scroll_pos) * tile_size,
-		table_cursor.w * tile_size + 2,
-		table_cursor.h * tile_size + 4,
-	});
+	if (keys_shift && comp_target == rom_table) {
+		render_color_set(renderer, colors[0x40]);
+		SDL_RenderDrawRect(renderer, &(SDL_Rect) { 
+			6 + table_cursor.x * tile_size,
+			7 + (table_cursor.y - table_scroll_pos) * tile_size,
+			tile_size + 4,
+			tile_size + 2,
+		});
+		SDL_RenderDrawRect(renderer, &(SDL_Rect) { 
+			7 + table_cursor.x * tile_size,
+			6 + (table_cursor.y - table_scroll_pos) * tile_size,
+			tile_size + 2,
+			tile_size + 4,
+		});
+	}
 
 	// SHOW SELECTION
 	render_color_set(renderer, colors[0x41]);
@@ -112,48 +114,78 @@ void comps_rom_table_update() {
 		selection_reset();
 	}
 	if (keys[SDL_SCANCODE_PAGEUP] % key_repeat == 1) {
-		table_selection.y -= 16;
-		if (table_selection.y < 0) table_selection.y = 0;
+		int diff = table_selection.y - 16;
+		table_cursor.y -= 16;
+		table_selection_origin.y -= 16;
+		if (diff < 0) { 
+			table_cursor.y -= diff;
+			table_selection_origin.y -= diff;
+		}
 	}
 	if (keys[SDL_SCANCODE_PAGEDOWN] % key_repeat == 1) {
-		table_selection.y += 16;
-		if (table_selection.y + table_selection.h > rom_tile_count >> 4) table_selection.y = (rom_tile_count >> 4) - table_selection.h;
-	}
-	if (keys[SDL_SCANCODE_UP] % key_repeat == 1) {
-		if (table_selection.y + table_selection.h > 1) {
-			if (keys_shift) {
-				table_selection.h--;
-				if (table_selection.h == 0) table_selection.h = -1;
-			}
-			else table_selection.y--;
+		int diff = table_selection.y + table_selection.h + 16 - (rom_tile_count >> 4);
+		table_cursor.y += 16;
+		table_selection_origin.y += 16;
+		if (diff > 0) { 
+			table_cursor.y -= diff;
+			table_selection_origin.y -= diff;
 		}
 	}
-	if (keys[SDL_SCANCODE_DOWN] % key_repeat == 1) {
-		if (table_selection.y + table_selection.h < rom_tile_count >> 4) {
+	if (!keys_ctrl) {
+		if (keys[SDL_SCANCODE_UP] % key_repeat == 1) {
 			if (keys_shift) {
-				table_selection.h++;
-				if (table_selection.h == 0) table_selection.h = 1;
+				if (table_cursor.y > 0) table_cursor.y--;
 			}
-			else table_selection.y++;
+			else if (table_selection.y > 0) {
+				table_selection_origin.y--;
+				table_cursor.y--;
+			}
+		}
+		if (keys[SDL_SCANCODE_DOWN] % key_repeat == 1) {
+			if (keys_shift) {
+				if (table_cursor.y < (rom_tile_count >> 4) - 1) table_cursor.y++;
+			}
+			else if (table_selection.y + table_selection.h < rom_tile_count >> 4) {
+				table_selection_origin.y++;
+				table_cursor.y++;
+			}
+		}
+		if (keys[SDL_SCANCODE_LEFT] % key_repeat == 1) {
+			if (keys_shift) {
+				if (table_cursor.x > 0) table_cursor.x--;
+			}
+			else if (table_selection.x > 0) {
+				table_selection_origin.x--;
+				table_cursor.x--;
+			}
+		}
+		if (keys[SDL_SCANCODE_RIGHT] % key_repeat == 1) {
+			if (keys_shift) {
+				if (table_cursor.x < 16 - 1) table_cursor.x++;
+			}
+			else if (table_selection.x + table_selection.w < 16) {
+				table_selection_origin.x++;
+				table_cursor.x++;
+			}
 		}
 	}
-	if (keys[SDL_SCANCODE_LEFT] % key_repeat == 1) {
-		if (table_selection.x + table_selection.w > 1) {
-			if (keys_shift) {
-				table_selection.w--;
-				if (table_selection.w == 0) table_selection.w = -1;
-			}
-			else table_selection.x--;
-		}
+	
+	// calculate table selection quards
+	if (table_cursor.x >= table_selection_origin.x) {
+		table_selection.x = table_selection_origin.x;
+		table_selection.w = table_cursor.x - table_selection_origin.x + 1;
 	}
-	if (keys[SDL_SCANCODE_RIGHT] % key_repeat == 1) {
-		if (table_selection.x + table_selection.w < 16) {
-			if (keys_shift) {
-				table_selection.w++;
-				if (table_selection.w == 0) table_selection.w = 1;
-			}
-			else table_selection.x++;
-		}
+	else {
+		table_selection.x = table_cursor.x;
+		table_selection.w = table_selection_origin.x - table_cursor.x;
+	}
+	if (table_cursor.y >= table_selection_origin.y) {
+		table_selection.y = table_selection_origin.y;
+		table_selection.h = table_cursor.y - table_selection_origin.y + 1;
+	}
+	else {
+		table_selection.y = table_cursor.y;
+		table_selection.h = table_selection_origin.y - table_cursor.y;
 	}
 
 	// make sure editor_selection fits within table_selection

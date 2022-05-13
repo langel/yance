@@ -21,27 +21,28 @@ void comps_manual_set_as_target() {
 SDL_Rect manual_rect = { 0, 0, 70 * 9, 28 * 16 };
 unsigned char manual_screen[manual_rows][manual_cols+1];
 
-char manual_commands_global[][42] = {
-	"Yet Another NES CHR Editor Manual"
-	"",
+char manual_commands_global[][65] = {
+	"             Yet  Another  NES  CHR  Editor  Manual            ",
+	"                                                                 ",
 	"                             ",
 	"",
-	"  Open        Drag File onto",
-	"             Yance Window",
+	"    Open        Drag + Drop        Set Color    1,2,3,4",
 	"",
-	"  Save         Ctrl-S",
+	"    Save        Ctrl-S             Set Palette  Ctrl-(1..8)  ",
 	"",
-	"  Copy         Ctrl-C",
+	"    Copy        Ctrl-C",
 	"",
-	"  Paste        Ctrl-V",
+	"    Paste       Ctrl-V",
 	"",
-	"  Undo         Ctrl-Z",
+	"    Undo        Ctrl-Z",
 	"",
-	"  Set Color    1,2,3,4",
+	" ",
 	"",
-	"  Set Palette  Ctrl-(1..8)",
+	"  ",
 	"",
-	"  Quit         Ctrl-Q",
+	"    Quit         Ctrl-Q",
+	"",
+	"",
 };
 
 
@@ -58,7 +59,7 @@ void comps_manual_init() {
 	manual_screen[manual_rows - 1][0] = 0xc8;
 	manual_screen[manual_rows - 1][manual_cols - 1] = 0xbc;
 	for (int r = 0; r < 20; r++) {
-		for (int c = 0; c < 40; c++) {
+		for (int c = 0; c < 64; c++) {
 			if ((int) manual_commands_global[r][c] != 0) {
 				manual_screen[r + 2][c + 3] = (unsigned char) manual_commands_global[r][c];
 			}

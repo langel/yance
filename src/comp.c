@@ -8,10 +8,13 @@ enum comp_targets {
 enum comp_targets comp_target;
 
 
-SDL_Rect table_cursor;
+SDL_Point table_cursor;
 SDL_Rect table_selection;
-SDL_Rect editor_cursor;
+SDL_Point table_selection_origin;
+
+SDL_Point editor_cursor;
 SDL_Rect editor_selection;
+SDL_Point editor_selection_origin;
 
 
 
@@ -25,11 +28,14 @@ SDL_Rect editor_selection;
 
 void comp_init() {
 	comp_target = rom_table;
+	SDL_Point point = { 0, 0 };
 	SDL_Rect rect = { 0, 0, 1, 1 };
-	table_cursor = rect;
+	table_cursor = point;
 	table_selection = rect;
-	editor_cursor = rect;
+	table_selection_origin = point;
+	editor_cursor = point;
 	editor_selection = rect;
+	editor_selection_origin = point;
 	comps_manual_init();
 }
 

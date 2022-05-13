@@ -6,14 +6,15 @@
 // 16 x 2048 tiles or 128 x 16384 pixels  
 // x 32bit color = 8,388,608 of GPU RAM
 
+//#define table_tiles_max 2048 // 4 banks
 // space for 256kb rom + header
 //#define table_tiles_max 16385
-
 // space for 4mb ROM
 //#define table_tiles_max 262144
+
+// how about as much space as we could possibly imagine
 #define table_tiles_max 1000000
 
-//#define table_tiles_max 2048 // 4 banks
 
 tile_struct table_tiles[table_tiles_max];
 
@@ -30,7 +31,7 @@ void table_init() {
 
 
 void table_update_palette() {
-	for (int t = 0; t < table_tiles_max; t++) {
+	for (int t = 0; t < rom_tile_count; t++) {
 		for (int i = 0; i < 64; i++) {
 			table_tiles[t].color_data[i] = palette_rgb_get(palette_current, table_tiles[t].values[i]);
 		}
