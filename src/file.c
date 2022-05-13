@@ -57,7 +57,6 @@ void file_load(char * filename) {
 		fseek(file, 0, SEEK_END);
 		file_chr_rom_size = ftell(file);
 	}
-	printf("%d\n", file_chr_rom_start);
 	fclose(file);
 	free(header);
 }

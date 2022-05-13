@@ -7,7 +7,7 @@
 int running = 1;
 int texture_w = 640;
 int texture_h = 360;
-int key_repeat = 5;
+int key_repeat = 6;
 SDL_Event event;
 SDL_Renderer * renderer;
 char * app_title = "Yet Another NES CHR Editor";

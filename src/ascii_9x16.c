@@ -5,9 +5,9 @@ SDL_Texture * ascii_texture;
 SDL_Rect ascii_rect;
 
 void ascii_init() {
-	unsigned char char_w = 9;
-	unsigned char char_h = 16;
-	int temp_w = 256 * 9;
+	int char_w = 9;
+	int char_h = 16;
+	int temp_w = 256 * char_w;
 	ascii_rect = (SDL_Rect) { 0, 0, temp_w, char_h };
 	uint32_t * temp = malloc(temp_w * char_h * 4);
 	memset(temp, 0, sizeof(&temp));
@@ -44,8 +44,8 @@ void ascii_color_set(uint32_t color_value) {
 		color_value >> 8 & 0xff);
 }
 
-void ascii_text_render(char * text, int x, int y) {
-	int length = strlen(text);
+void ascii_text_render(unsigned char * text, int x, int y) {
+	int length = strlen((char*) text);
 	SDL_Rect src = { 0, 0, 9, 16 };
 	SDL_Rect dest = { x, y, 9, 16 };
 	for (int i = 0; i < length; i++) {

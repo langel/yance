@@ -120,67 +120,39 @@ void comps_rom_table_update() {
 		if (table_selection.y + table_selection.h > rom_tile_count >> 4) table_selection.y = (rom_tile_count >> 4) - table_selection.h;
 	}
 	if (keys[SDL_SCANCODE_UP] % key_repeat == 1) {
-		if (keys_shift && !keys_ctrl) {
-			if (table_selection.y != 0) {
-				table_selection.y--;
-				table_selection.h++;
+		if (table_selection.y + table_selection.h > 1) {
+			if (keys_shift) {
+				table_selection.h--;
+				if (table_selection.h == 0) table_selection.h = -1;
 			}
-		}
-		else if (keys_ctrl) {
-			if (table_selection.h > 1) table_selection.h--;
-		}
-		else {
-			if (table_selection.y != 0) table_selection.y--;
+			else table_selection.y--;
 		}
 	}
 	if (keys[SDL_SCANCODE_DOWN] % key_repeat == 1) {
-		if (keys_shift && !keys_ctrl) {
-			if (table_selection.y + table_selection.h < rom_tile_count >> 4) {
+		if (table_selection.y + table_selection.h < rom_tile_count >> 4) {
+			if (keys_shift) {
 				table_selection.h++;
+				if (table_selection.h == 0) table_selection.h = 1;
 			}
-		}
-		else if (keys_ctrl) {
-			if (table_selection.h > 1) {
-				table_selection.y++;
-				table_selection.h--;
-			}
-		}
-		else {	
-			if (table_selection.y + table_selection.h < rom_tile_count >> 4) {
-				table_selection.y++;
-			}
+			else table_selection.y++;
 		}
 	}
 	if (keys[SDL_SCANCODE_LEFT] % key_repeat == 1) {
-		if (keys_shift && !keys_ctrl) {
-			if (table_selection.x != 0) {
-				table_selection.x--;
-				table_selection.w++;
+		if (table_selection.x + table_selection.w > 1) {
+			if (keys_shift) {
+				table_selection.w--;
+				if (table_selection.w == 0) table_selection.w = -1;
 			}
-		}
-		else if (keys_ctrl) {
-			if (table_selection.w > 1) table_selection.w--;
-		}
-		else {	
-			if (table_selection.x != 0) table_selection.x--;
+			else table_selection.x--;
 		}
 	}
 	if (keys[SDL_SCANCODE_RIGHT] % key_repeat == 1) {
-		if (keys_shift && !keys_ctrl) {
-			if (table_selection.x + table_selection.w < 16) {
+		if (table_selection.x + table_selection.w < 16) {
+			if (keys_shift) {
 				table_selection.w++;
+				if (table_selection.w == 0) table_selection.w = 1;
 			}
-		}
-		else if (keys_ctrl) {
-			if (table_selection.w > 1) {
-				table_selection.x++;
-				table_selection.w--;
-			}
-		}
-		else {
-			if (table_selection.x + table_selection.w < 16) {
-				table_selection.x++;
-			}
+			else table_selection.x++;
 		}
 	}
 

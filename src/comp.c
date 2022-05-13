@@ -3,13 +3,15 @@ SDL_Rect comp_space;
 enum comp_targets {
 	rom_table,
 	editor,
+	manual,
 };
 enum comp_targets comp_target;
 
-SDL_Rect table_cursor = { 0, 0, 1, 1 };
-SDL_Rect table_selection = { 0, 0, 1, 1 };
-SDL_Rect editor_cursor = { 0, 0, 1, 1 };
-SDL_Rect editor_selection = { 0, 0, 1, 1 };
+
+SDL_Rect table_cursor;
+SDL_Rect table_selection;
+SDL_Rect editor_cursor;
+SDL_Rect editor_selection;
 
 
 
@@ -18,10 +20,16 @@ SDL_Rect editor_selection = { 0, 0, 1, 1 };
 #include "./comps/colors.c"
 #include "./comps/rom_table.c"
 #include "./comps/status_bar.c"
+#include "./comps/manual.c"
 
 
 void comp_init() {
 	comp_target = rom_table;
+	SDL_Rect rect = { 0, 0, 1, 1 };
+	table_cursor = rect;
+	table_selection = rect;
+	editor_cursor = rect;
+	editor_selection = rect;
 }
 
 
@@ -35,13 +43,20 @@ void comp_render() {
 	comps_rom_table_render();
 	comps_colors_render();
 	comps_editor_render();
+	if (comp_target == manual) {
+		comps_manual_render();
+	};
 }
 
 
 void comp_update() {
 
+	if (keys[SDL_SCANCODE_F1] == 1) {
+		comps_manual_set_as_target();
+	}
 	// quit
-	if (keys[SDL_SCANCODE_ESCAPE]) running = 0;
+	//if (keys[SDL_SCANCODE_ESCAPE]) running = 0;
+	if (keys_ctrl && keys[SDL_SCANCODE_Q]) running = 0;
 
 	// tab around
 	if (keys[SDL_SCANCODE_TAB] == 1) {
@@ -51,8 +66,7 @@ void comp_update() {
 
 	// save
 	if (keys_ctrl && keys[SDL_SCANCODE_S] == 1) {	
-		printf("saveing\n");
-		table_save("temp.chr");
+		table_save();
 	}
 
 	// open github
@@ -109,18 +123,38 @@ void comp_update() {
 
 	// handle palette stuff
 	if (keys_ctrl) {
-		if (keys[SDL_SCANCODE_1]) palette_current_set(0);
-		if (keys[SDL_SCANCODE_2]) palette_current_set(1);
-		if (keys[SDL_SCANCODE_3]) palette_current_set(2);
-		if (keys[SDL_SCANCODE_4]) palette_current_set(3);
-		if (keys[SDL_SCANCODE_5]) palette_current_set(4);
-		if (keys[SDL_SCANCODE_6]) palette_current_set(5);
-		if (keys[SDL_SCANCODE_7]) palette_current_set(6);
-		if (keys[SDL_SCANCODE_8]) palette_current_set(7);
-		// XXX updating all tile pixel data
-		//     and textures every frame might
-		//     not be the most optimized
-		table_update_palette();
+		if (keys[SDL_SCANCODE_1] == 1) {
+			palette_current_set(0);
+			table_update_palette();
+		}
+		if (keys[SDL_SCANCODE_2] == 1) {
+			palette_current_set(1);
+			table_update_palette();
+		}
+		if (keys[SDL_SCANCODE_3] == 1) {
+			palette_current_set(2);
+			table_update_palette();
+		}
+		if (keys[SDL_SCANCODE_4] == 1) {
+			palette_current_set(3);
+			table_update_palette();
+		}
+		if (keys[SDL_SCANCODE_5] == 1) {
+			palette_current_set(4);
+			table_update_palette();
+		}
+		if (keys[SDL_SCANCODE_6] == 1) {
+			palette_current_set(5);
+			table_update_palette();
+		}
+		if (keys[SDL_SCANCODE_7] == 1) {
+			palette_current_set(6);
+			table_update_palette();
+		}
+		if (keys[SDL_SCANCODE_8] == 1) {
+			palette_current_set(7);
+			table_update_palette();
+		}
 	}
 	else {
 		if (keys[SDL_SCANCODE_1]) palette_current_color_set(0);
@@ -132,4 +166,5 @@ void comp_update() {
 	// handle other comps
 	if (comp_target == rom_table) comps_rom_table_update();
 	if (comp_target == editor) comps_editor_update();
+	if (comp_target == manual) comps_manual_update();
 }

@@ -14,8 +14,8 @@ void comps_colors_render() {
 		SDL_RenderFillRect(renderer, &(SDL_Rect) { xoff, yoff, swatch_size, swatch_size });
 		if (swatch_size >= 24) {
 			ascii_color_set(colors[c] ^ 0xffffff0f);
-			char hex[3];
-			sprintf(hex, "%02X", c);
+			unsigned char hex[3];
+			sprintf((char*)hex, "%02X", c);
 			ascii_text_render(hex, xoff + swatch_size - 24, yoff + 4);
 		}
 	}

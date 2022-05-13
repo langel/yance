@@ -16,14 +16,21 @@ void comps_editor_render() {
 	float ratio = (x_ratio < y_ratio) ? x_ratio : y_ratio;
 	ratio *= 8;
 
-	int x_off = comp_space.x + (comp_space.w - table_selection.w * ratio) / 2;
-	int y_off = comp_space.y + (comp_space.h - table_selection.h * ratio) / 2;
+	SDL_Rect dest = {
+		table_selection.x + table_selection.w,
+		table_selection.y + table_selection.h,
+		abs(table_selection.w),
+		abs(table_selection.h),
+	};
+
+	int x_off = comp_space.x + (comp_space.w - dest.w * ratio) / 2;
+	int y_off = comp_space.y + (comp_space.h - dest.h * ratio) / 2;
 
 	// SHOW TILE(S)
-	for (int x = 0; x < table_selection.w; x++) {
-		for (int y = 0; y < table_selection.h; y++) {
+	for (int x = 0; x < dest.w; x++) {
+		for (int y = 0; y < dest.h; y++) {
 			SDL_RenderCopy(renderer, table_tiles[
-				table_selection.x + x + (table_selection.y + y) * 16].texture,
+				dest.x + x + (dest.y + y) * 16].texture,
 				NULL, &(SDL_Rect) {
 				x_off + (int) (ratio * (float) x),
 				y_off + (int) (ratio * (float) y),
@@ -36,8 +43,8 @@ void comps_editor_render() {
 	// HIGHLIGHT COMP (if current)
 	if (comp_target == editor) {
 		render_color_set(renderer, colors[0x45]);
-		int w = (int) ((float) table_selection.w * ratio);
-		int h = (int) ((float) table_selection.h * ratio);
+		int w = (int) ((float) dest.w * ratio);
+		int h = (int) ((float) dest.h * ratio);
 		SDL_RenderDrawRect(renderer, &(SDL_Rect) {
 			x_off - 3,
 			y_off - 1,

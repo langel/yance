@@ -24,9 +24,10 @@ void src_all_init() {
 void src_event(SDL_Event event) {
 	if (event.type == SDL_DROPFILE) {
 		char * filename = event.drop.file;
-		printf("%s\n", filename);
 		table_load(filename);
 		SDL_free(filename); 
+		comp_init();
 		SDL_RaiseWindow(window);
 	}
 }
+

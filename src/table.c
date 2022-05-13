@@ -67,7 +67,7 @@ void table_load(char * filename) {
 	free(rom_binary);
 }
 
-void table_save(char * filename) {
+void table_save() {
 	// setup
 	int size = rom_tile_count * 16;
 	rom_binary = malloc(size);
@@ -81,8 +81,10 @@ void table_save(char * filename) {
 		}
 	}
 	// save
-	FILE * file = fopen(filename, "wb");
+	// XXX this won't work if they rename the file while editing
+	FILE * file = fopen(file_filename, "r+b");
 	printf(" %d byte\n", size);
+	fseek(file, file_chr_rom_start, SEEK_SET);
 	fwrite(rom_binary, size, 1, file); 
 	fclose(file);
 	// cleanup
