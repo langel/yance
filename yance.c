@@ -33,10 +33,7 @@ int main(int argc, char * args[]) {
 	SDL_RenderPresent(renderer);
 
 	src_all_init();
-
 	table_load("guntner.chr");
-	//table_load("milon.nes");
-	//table_load("punchout.nes");
 
 //	SDL_ShowCursor(SDL_DISABLE);
 

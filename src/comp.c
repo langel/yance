@@ -30,6 +30,7 @@ void comp_init() {
 	table_selection = rect;
 	editor_cursor = rect;
 	editor_selection = rect;
+	comps_manual_init();
 }
 
 
