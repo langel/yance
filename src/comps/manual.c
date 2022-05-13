@@ -2,8 +2,10 @@
 enum comp_targets comps_manual_cache_src_comp;
 
 void comps_manual_set_as_target() {
-	comps_manual_cache_src_comp = comp_target;
-	comp_target = manual;
+	if (comp_target != manual) {
+		comps_manual_cache_src_comp = comp_target;
+		comp_target = manual;
+	}
 }
 
 /*

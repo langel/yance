@@ -7,7 +7,11 @@
 // x 32bit color = 8,388,608 of GPU RAM
 
 // space for 256kb rom + header
-#define table_tiles_max 16385
+//#define table_tiles_max 16385
+
+// space for 4mb ROM
+//#define table_tiles_max 262144
+#define table_tiles_max 1000000
 
 //#define table_tiles_max 2048 // 4 banks
 
@@ -19,12 +23,8 @@ int rom_tile_count;
 
 
 void table_init() {
-	// allocation should be based on needs
-	// XXX not on possibilities
 	for (int i = 0; i < table_tiles_max; i++) {
-		table_tiles[i].color_data = malloc(256);
-		table_tiles[i].texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 8, 8);
-		SDL_SetTextureBlendMode(table_tiles[i].texture, SDL_BLENDMODE_BLEND);
+		table_tiles[i].color_data = NULL;
 	}
 }
 
@@ -55,6 +55,10 @@ void table_load(char * filename) {
 	rom_binary = malloc(file_chr_rom_size);
 	fread(rom_binary, file_chr_rom_size, 1, file);
 	fclose(file);
+	// initialize required tiles 
+	for (int t = 0; t < rom_tile_count; t++) {
+		tile_initialize(&table_tiles[t]);
+	}
 	// convert data
 	uint8_t sizteen_bytes[16];
 	for (int t = 0; t < rom_tile_count; t++) {

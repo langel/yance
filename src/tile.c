@@ -9,6 +9,14 @@ typedef struct {
 
 SDL_Rect tile_rect = { 0, 0, 8, 8 };
 
+void tile_initialize(tile_struct * tile) {
+	if (tile->color_data == 0) {
+		tile->color_data = malloc(256);
+		tile->texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 8, 8);
+		SDL_SetTextureBlendMode(tile->texture, SDL_BLENDMODE_BLEND);
+	}
+}
+
 void tile_update_texture(tile_struct * tile) {
 	SDL_UpdateTexture(tile->texture, NULL, tile->color_data, 8 * 4);
 }
