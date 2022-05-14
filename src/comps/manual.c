@@ -26,24 +26,26 @@ char manual_commands_global[][65] = {
 	"                                                                 ",
 	"                             ",
 	"",
-	"    Open      Drag + Drop       Navigate        Tab",
+	"    Open        Drag + Drop     Navigate          Tab",
 	"",
-	"    Save      Ctrl-S            Move Cursor     Arrows",
+	"    Save        Ctrl-S          Move Cursor       Arrows",
 	"",
-	"    Copy      Ctrl-C            Edit Selection  Shift-Arrows",
+	"    Copy        Ctrl-C          Edit Selection    Shift-Arrows",
 	"",
-	"    Paste     Ctrl-V",
+	"    Cut         Ctrl-X          Deselect          Ctrl-D",
 	"",
-	"    Undo      Ctrl-Z",
+	"    Paste       Ctrl-V          Page Up/Down in Rom View",
 	"",
-	"                                   Current Color     1,2,3,4",
-	"                                   Change Color      Ctrl-Arrows",
-	"                                   Current Palette   Ctrl-(1..8)",
-	"  ",
+	"    Undo        Ctrl-Z          Plot Pixels       Space",
 	"",
-	"    Quit       Ctrl-Q",
+	"    Flip        F               Current Color     1,2,3,4",
+	"    Mirror      M               Change Color      Ctrl-Arrows",
+	"    Translate   Ctrl-Arrows     Current Palette   Ctrl-(1..8)",
+	"    Rotate CW   R",
+	"    Rotate CCW  Shift-R         View Source       Ctrl-G",
 	"",
 	"",
+	"    Quit       Ctrl-Q                 Close This Manual   ESC",
 };
 
 
@@ -59,7 +61,7 @@ void comps_manual_init() {
 	manual_screen[0][manual_cols - 1] = 0xbb;
 	manual_screen[manual_rows - 1][0] = 0xc8;
 	manual_screen[manual_rows - 1][manual_cols - 1] = 0xbc;
-	for (int r = 0; r < 20; r++) {
+	for (int r = 0; r < 24; r++) {
 		for (int c = 0; c < 64; c++) {
 			if ((int) manual_commands_global[r][c] != 0) {
 				manual_screen[r + 2][c + 3] = (unsigned char) manual_commands_global[r][c];

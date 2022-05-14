@@ -127,14 +127,22 @@ void comp_update() {
 		if (keys[SDL_SCANCODE_M] == 1) {
 			transform_mirror(oprect);
 		}
+		// translate
+		if (keys_ctrl && keys_shift) {
+			if (keys[SDL_SCANCODE_RIGHT] == 1) transform_translate(oprect, 0);
+			if (keys[SDL_SCANCODE_UP] == 1) transform_translate(oprect, 1);
+			if (keys[SDL_SCANCODE_LEFT] == 1) transform_translate(oprect, 2);
+			if (keys[SDL_SCANCODE_DOWN] == 1) transform_translate(oprect, 3);
+		}
 		// rotate
 		if (keys[SDL_SCANCODE_R] == 1) {
-			transform_rotate(oprect);
+			if (keys_ctrl || keys_shift) transform_rotate(oprect, 0);
+			else transform_rotate(oprect, 1);
 		}
 	}
 
 	// handle palette stuff
-	if (keys_ctrl) {
+	if (keys_ctrl && !keys_shift) {
 		// PALETTE CHANGE WHICH
 		if (keys[SDL_SCANCODE_1] == 1) {
 			palette_current_set(0);
