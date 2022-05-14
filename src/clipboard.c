@@ -30,6 +30,21 @@ void clipboard_pixels_copy(SDL_Rect src) {
 }
 
 
+void clipboard_pixels_cut(SDL_Rect src) {
+	pixel_struct pxl = pixel_new();
+	pxl.rect = src;
+	undo_record(pixel_state_capture(pxl));
+	SDL_SetClipboardText(pixel_state_capture(pxl));
+	pxl.size = pxl.rect.w * pxl.rect.h;
+	free(pxl.values);
+	pxl.values = malloc(pxl.size);
+	for (int i = 0; i < pxl.size; i++) {
+		pxl.values[i] = 0;
+	}
+	pixel_state_plot(pxl);
+}
+
+
 void clipboard_pixels_paste(SDL_Rect dest) {
 	pixel_struct pxl = pixel_new();
 	char * string = SDL_GetClipboardText();

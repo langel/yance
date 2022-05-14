@@ -9,6 +9,7 @@
 #include "./pixel.c"
 #include "./undo.c"
 #include "./clipboard.c"
+#include "./transform.c"
 #include "./comp.c"
 
 void src_all_init() {

@@ -92,39 +92,44 @@ void comp_update() {
 		undo_redo();
 	}
 
-	// copy
-	if (keys_ctrl && keys[SDL_SCANCODE_C] == 1) {
-		if (comp_target == rom_table) {
-			clipboard_pixels_copy((SDL_Rect) { 
-				table_selection.x << 3,
-				table_selection.y << 3,
-				table_selection.w << 3,
-				table_selection.h << 3,
-			});
+	SDL_Rect oprect;
+	if (comp_target == rom_table) oprect = (SDL_Rect) {
+		table_selection.x << 3,
+		table_selection.y << 3,
+		table_selection.w << 3,
+		table_selection.h << 3,
+	};
+	if (comp_target == editor) oprect = (SDL_Rect) {
+		(table_selection.x << 3) + editor_selection.x,
+		(table_selection.y << 3) + editor_selection.y,
+		editor_selection.w,
+		editor_selection.h,
+	};
+	if (oprect.w) {
+		// copy
+		if (keys_ctrl && keys[SDL_SCANCODE_C] == 1) {
+			clipboard_pixels_copy(oprect);
 		}
-		if (comp_target == editor) {
-			clipboard_pixels_copy((SDL_Rect) {
-				(table_selection.x << 3) + editor_selection.x,
-				(table_selection.y << 3) + editor_selection.y,
-				editor_selection.w,
-				editor_selection.h,
-			});
+		// cut
+		if (keys_ctrl && keys[SDL_SCANCODE_X] == 1) {
+			clipboard_pixels_cut(oprect);
 		}
-	}
+		// paste
+		if (keys_ctrl && keys[SDL_SCANCODE_V] == 1) {
+			clipboard_pixels_paste(oprect);
+		}
 
-	// paste
-	if (keys_ctrl && keys[SDL_SCANCODE_V] == 1) {
-		if (comp_target == rom_table) {
-			clipboard_pixels_paste((SDL_Rect) {
-				table_selection.x << 3, 
-				table_selection.y << 3,
-				0, 0 });
+		// flip
+		if (keys[SDL_SCANCODE_F] == 1) {
+			transform_flip(oprect);
 		}
-		if (comp_target == editor) {
-			clipboard_pixels_paste((SDL_Rect) {
-				(table_selection.x << 3) + editor_selection.x,
-				(table_selection.y << 3) + editor_selection.y,
-				0, 0 });
+		// mirror
+		if (keys[SDL_SCANCODE_M] == 1) {
+			transform_mirror(oprect);
+		}
+		// rotate
+		if (keys[SDL_SCANCODE_R] == 1) {
+			transform_rotate(oprect);
 		}
 	}
 
