@@ -26,6 +26,14 @@ void palette_current_color_set(int i) {
 	palette_current_color_id = palette[palette_current][palette_current_color];
 }
 
+void palette_current_color_value_set(int i) {
+	palette_current_color_id = i;
+	palette[palette_current][palette_current_color] = i;
+	if (palette_current_color == 0) {
+		palette[0][palette_current_color] = i;
+	}
+}
+
 uint32_t palette_rgb_get(int pal, int col) {
 	return (col) ? colors[palette[pal][col]] : colors[palette[0][0]];
 }

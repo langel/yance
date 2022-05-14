@@ -30,7 +30,6 @@ pixel_struct pixel_new() {
 
 
 const char * pixel_state_capture(pixel_struct pxl) {
-
 	int size = pxl.rect.w * pxl.rect.h;
 	char * string = malloc((0xc + size + 1) * sizeof(char*));
 	char * pout = string;

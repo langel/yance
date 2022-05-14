@@ -1,7 +1,7 @@
 
 
 uint8_t * header;
-char header_str[16];
+char header_type_str[16];
 
 enum file_types {
 	unknown,
@@ -28,10 +28,10 @@ void file_load(char * filename) {
 	file_prg_rom_size = 0;
 	file_chr_rom_size = 0;
 	file_chr_rom_start = 0;
-	strcpy(header_str, "NO HEADER");
+	strcpy(header_type_str, "NO HEADER");
 	if (header[0]=='N' && header[1]=='E' && header[2]=='S' && header[3]==0x1A) {
 		file_type = iNES;
-		strcpy(header_str, "iNES");
+		strcpy(header_type_str, "iNES");
 		// byte 4 PRG ROM data (16384 * x bytes)
 		file_prg_rom_size = header[4] << 14;
 		// byte 5 CHR ROM data, if present (8192 * y bytes)
@@ -43,7 +43,7 @@ void file_load(char * filename) {
 		// byte 7 has misc and also NES2 flag
 		if ((header[7] & 0x0C) == 0x08) {
 			file_type = NES2;
-			strcpy(header_str, "NES2.0");
+			strcpy(header_type_str, "NES2.0");
 		}
 		file_chr_rom_start = 16 + file_has_trainer;
 		if (file_chr_rom_size) {

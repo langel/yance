@@ -9,8 +9,9 @@ typedef struct {
 
 SDL_Rect tile_rect = { 0, 0, 8, 8 };
 
+
 void tile_initialize(tile_struct * tile) {
-	if (tile->color_data == 0) {
+	if (!tile->color_data) {
 		tile->color_data = malloc(256);
 		tile->texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 8, 8);
 		SDL_SetTextureBlendMode(tile->texture, SDL_BLENDMODE_BLEND);

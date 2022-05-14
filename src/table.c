@@ -41,11 +41,9 @@ void table_update_palette() {
 
 
 void table_load(char * filename) {
-	// checakout header
+	// checkout header
 	file_load(filename);
-	free(window_title);
-	window_title = calloc(strlen(app_title) + 3 + strlen(filename + 1), 1);
-	strcat(window_title, app_title);
+	strcpy(window_title, app_title);
 	strcat(window_title, " - ");
 	strcat(window_title, filename);
 	SDL_SetWindowTitle(window, window_title);
@@ -76,7 +74,6 @@ void table_save() {
 	// setup
 	int size = rom_tile_count * 16;
 	rom_binary = malloc(size);
-	printf("malloc: %d\n", rom_tile_count * 16);
 	// convert data
 	uint8_t sizteen_bytes[16];
 	for (int t = 0; t < rom_tile_count; t++) {
@@ -88,7 +85,6 @@ void table_save() {
 	// save
 	// XXX this won't work if they rename the file while editing
 	FILE * file = fopen(file_filename, "r+b");
-	printf(" %d byte\n", size);
 	fseek(file, file_chr_rom_start, SEEK_SET);
 	fwrite(rom_binary, size, 1, file); 
 	fclose(file);

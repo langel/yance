@@ -4,6 +4,8 @@
 #include <time.h>
 #include <SDL2/SDL.h>
 
+
+
 int running = 1;
 int texture_w = 640;
 int texture_h = 360;
@@ -11,7 +13,7 @@ int key_repeat = 6;
 SDL_Event event;
 SDL_Renderer * renderer;
 char * app_title = "Yet Another NES CHR Editor";
-char * window_title = NULL;
+char window_title[1024];
 
 #include "lib/all.c"
 #include "src/all.c"

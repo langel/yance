@@ -130,6 +130,7 @@ void comp_update() {
 
 	// handle palette stuff
 	if (keys_ctrl) {
+		// PALETTE CHANGE WHICH
 		if (keys[SDL_SCANCODE_1] == 1) {
 			palette_current_set(0);
 			table_update_palette();
@@ -162,8 +163,25 @@ void comp_update() {
 			palette_current_set(7);
 			table_update_palette();
 		}
+		// CHANGE CURRENT COLOR VALUE
+		int color_target = palette_current_color_id;
+		if (keys[SDL_SCANCODE_RIGHT] % key_repeat == 1) 
+			if ((color_target & 0x0f) < 0x0f) color_target++;
+		if (keys[SDL_SCANCODE_LEFT] % key_repeat == 1) 
+			if ((color_target & 0x0f) > 0x00) color_target--;
+		if (keys[SDL_SCANCODE_UP] % key_repeat == 1) 
+			if (color_target > 0x0f) color_target -= 16;
+		if (keys[SDL_SCANCODE_DOWN] % key_repeat == 1) 
+			if ((color_target & 0xf0) < 0x30) color_target += 16;
+		if (color_target != palette_current_color_id) {
+			if (color_target < 0x00) color_target = 0x00;
+			if (color_target > 0x3f) color_target = 0x3f;
+			palette_current_color_value_set(color_target);
+			table_update_palette();
+		}
 	}
 	else {
+		// CHANGE CURRENT BRUSH COLOR
 		if (keys[SDL_SCANCODE_1]) palette_current_color_set(0);
 		if (keys[SDL_SCANCODE_2]) palette_current_color_set(1);
 		if (keys[SDL_SCANCODE_3]) palette_current_color_set(2);
