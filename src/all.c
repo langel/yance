@@ -1,6 +1,7 @@
 
 #include "./color.c"
 #include "./palette.c"
+#include "./bmp.c"
 #include "./sfx.c"
 #include "./file.c"
 #include "./tile.c"

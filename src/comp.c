@@ -82,6 +82,23 @@ void comp_update() {
 		SDL_OpenURL("https://github.com/langel/yance");
 	}
 
+	// import bmp
+	if (keys_ctrl && keys[SDL_SCANCODE_B] == 1) {
+		SDL_Surface * bmp_surface = bmp_get_surface("yance-default-tilese-2t.bmp");
+		printf("bmp x,y : %d, %d \n", bmp_surface->w, bmp_surface->h);
+		printf("bmp bpp: %f\n", (float) bmp_surface->pitch / (float) bmp_surface->w);
+		int bpp = bmp_surface->format->BytesPerPixel;
+		for (int y = 0; y < bmp_surface->h; y++) {
+			for (int x = 0; x < bmp_surface->w; x++) {
+				SDL_Color rgb = bmp_get_color(bmp_surface, x, y);
+				int avg = ((rgb.r + rgb.g + rgb.b) / 3) >> 6;
+				table_pixel_set_value(x, y, avg);
+				//printf("%d", avg);
+			}
+			//printf("\n");
+		}
+	}
+
 	// undo
 	if (keys_ctrl && !keys_shift && keys[SDL_SCANCODE_Z] == 1) {
 		undo_rewind();
