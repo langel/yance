@@ -25,7 +25,6 @@ char manual_commands_global[][65] = {
 	"             Yet  Another  NES  CHR  Editor  Manual            ",
 	"                                                                 ",
 	"                             ",
-	"",
 	"    Open        Drag + Drop     Navigate          Tab",
 	"",
 	"    Save        Ctrl-S          Move Cursor       Arrows",
@@ -40,12 +39,13 @@ char manual_commands_global[][65] = {
 	"",
 	"    Flip        F               Current Color     1,2,3,4",
 	"    Mirror      M               Change Color      Ctrl-Arrows",
-	"    Translate   Ctrl-Arrows     Current Palette   Ctrl-(1..8)",
+	"    Translate   CtrlShftArrows  Current Palette   Ctrl-(1..8)",
 	"    Rotate CW   R",
 	"    Rotate CCW  Shift-R         View Source       Ctrl-G",
 	"",
 	"",
-	"    Quit       Ctrl-Q                 Close This Manual   ESC",
+	"    Quit        Ctrl-Q                 Close this Manual   ESC",
+	"",
 };
 
 
