@@ -38,7 +38,20 @@ void comps_rom_table_render() {
 	for (int t = tile_start; t < tile_end; t++) {
 		tile_rect.x = comp_space.x + (i % 16) * tile_size;
 		tile_rect.y = comp_space.y + (i >> 4) * tile_size;
-		SDL_RenderCopy(renderer, table_tiles[t].texture, NULL, &tile_rect);
+		int tile_id = t;
+		if (sprite_size_toggle) {
+			int set_of_32 = (t >> 5) << 5;
+			tile_id = t & 0x1f;
+			// even row
+			if (((t >> 4) & 1) == 0) {
+				tile_id = (tile_id << 1) + set_of_32;
+			}
+			// odd row
+			else {
+				tile_id = ((tile_id - 16) << 1) + 1 + set_of_32;
+			}
+		}
+		SDL_RenderCopy(renderer, table_tiles[tile_id].texture, NULL, &tile_rect);
 		i++;
 	}
 

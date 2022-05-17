@@ -16,6 +16,8 @@ SDL_Point editor_cursor;
 SDL_Rect editor_selection;
 SDL_Point editor_selection_origin;
 
+// 0 = 8x8; 1 = 8x16;
+int sprite_size_toggle = 0;
 
 
 #include "./comps/editor.c"
@@ -80,6 +82,12 @@ void comp_update() {
 	if (keys_ctrl && keys[SDL_SCANCODE_G] == 1) {
 		printf("opening source\n");
 		SDL_OpenURL("https://github.com/langel/yance");
+	}
+
+	// toggle 8x16 mode
+	if (keys[SDL_SCANCODE_T] == 1) {
+		sprite_size_toggle = (sprite_size_toggle + 1) % 2;
+		printf("sprite size toggle = %d\n", sprite_size_toggle);
 	}
 
 	// import bmp
