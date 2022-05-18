@@ -21,6 +21,8 @@ tile_struct table_tiles[table_tiles_max];
 char * rom_binary;
 int rom_tile_count;
 
+// 0 = 8x8; 1 = 8x16;
+int table_sprite_size_mode = 0;
 
 
 void table_init() {
@@ -92,17 +94,28 @@ void table_save() {
 	free(rom_binary);
 }
 
+int table_sprite_size_mode_translate(int t) {
+	if (table_sprite_size_mode == 0) return t;
+	int set32 = (t >> 5) << 5;
+	t = t & 0x1f;
+	// even row
+	if (((t >> 4) & 1) == 0) t = (t << 1) + set32;
+	// odd row
+	else t = ((t - 16) << 1) + 1 + set32;
+	return t;
+}
+
 uint8_t table_pixel_get_value(int x, int y) {
 	int tile = (x >> 3) + ((y >> 3) << 4);
+	tile = table_sprite_size_mode_translate(tile);
 	int pos = (x % 8) + ((y % 8) << 3);
 	return table_tiles[tile].values[pos];
 }
 
 void table_pixel_set_value(int x, int y, int value) {
 	int tile = (x >> 3) + ((y >> 3) << 4);
+	tile = table_sprite_size_mode_translate(tile);
 	int pos = (x % 8) + ((y % 8) << 3);
 	tile_update_pixel(&table_tiles[tile], pos, value);
 }
 	
-
-

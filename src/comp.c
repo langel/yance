@@ -16,9 +16,6 @@ SDL_Point editor_cursor;
 SDL_Rect editor_selection;
 SDL_Point editor_selection_origin;
 
-// 0 = 8x8; 1 = 8x16;
-int sprite_size_toggle = 0;
-
 
 #include "./comps/editor.c"
 #include "./comps/palettes.c"
@@ -86,8 +83,9 @@ void comp_update() {
 
 	// toggle 8x16 mode
 	if (keys[SDL_SCANCODE_T] == 1) {
-		sprite_size_toggle = (sprite_size_toggle + 1) % 2;
-		printf("sprite size toggle = %d\n", sprite_size_toggle);
+		table_sprite_size_mode = (table_sprite_size_mode + 1) % 2;
+		if (table_sprite_size_mode) comps_status_bar_message_set(" 8x16 Sprite Size view ENABLED ");
+		else comps_status_bar_message_set(" 8x16 Sprite Size view DISABLED ");
 	}
 
 	// import bmp

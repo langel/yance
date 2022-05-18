@@ -29,8 +29,9 @@ void comps_editor_render() {
 	// SHOW TILE(S)
 	for (int x = 0; x < table_selection.w; x++) {
 		for (int y = 0; y < table_selection.h; y++) {
-			SDL_RenderCopy(renderer, table_tiles[
-				table_selection.x + x + (table_selection.y + y) * 16].texture,
+			int t = table_selection.x + x + (table_selection.y + y) * 16;
+			t = table_sprite_size_mode_translate(t);
+			SDL_RenderCopy(renderer, table_tiles[t].texture,
 				NULL, &(SDL_Rect) {
 				x_off + (int) (ratio * (float) x),
 				y_off + (int) (ratio * (float) y),
@@ -107,6 +108,7 @@ void editor_paint() {
 		for (int y = 0; y < editor_selection.h; y++) {
 			int t = ((editor_selection.x + x) >> 3) + table_selection.x + 
 				((((editor_selection.y + y) >> 3) + table_selection.y) << 4);
+			t = table_sprite_size_mode_translate(t);
 			int pos = (editor_selection.x + x) % 8 + (((editor_selection.y + y) % 8) << 3);
 			tile_update_pixel(&table_tiles[t], pos, palette_current_color);
 		}

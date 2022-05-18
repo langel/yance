@@ -34,7 +34,7 @@ char manual_commands_global[][65] = {
 	"    Cut         Ctrl-X          Deselect          Ctrl-D",
 	"",
 	"    Paste       Ctrl-V          Page Up/Down in Rom View",
-	"",
+	"                                Toggle 8x16 Mode  T",
 	"    Undo        Ctrl-Z          Plot Pixels       Space",
 	"",
 	"    Flip        F               Current Color     1,2,3,4",
