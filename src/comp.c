@@ -107,7 +107,7 @@ void comp_update() {
 
 	// undo
 	if (keys_ctrl && !keys_shift && keys[SDL_SCANCODE_Z] == 1) {
-		undo_rewind();
+		if (undo_rewind() == -1) comps_status_bar_message_set(" @ end of Undo History ");
 	}
 
 	// redo

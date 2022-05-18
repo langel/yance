@@ -26,8 +26,8 @@ void undo_record(const char * data) {
 	else undo_count++;
 }
 
-void undo_rewind() {
-	if (undo_count == 0) return;
+int undo_rewind() {
+	if (undo_count == 0) return -1;
 	undo_count--;
 	undo_head--;
 	if (undo_head == -1) undo_head += undo_max_steps;
@@ -35,6 +35,7 @@ void undo_rewind() {
 	char * ptr = undo_log[undo_head];
 	pixel_state_reconstruct(&pxl, ptr);
 	pixel_state_plot(pxl);
+	return undo_count;
 }
 
 void undo_redo() {
