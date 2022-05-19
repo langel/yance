@@ -203,4 +203,5 @@ void comps_rom_table_update() {
 		editor_selection.h += editor_selection.y;
 		editor_selection.y = 0;
 	}
+	pos_addr = table_sprite_size_mode_translate(table_selection.x + (table_selection.y << 4));
 }

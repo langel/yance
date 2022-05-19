@@ -193,6 +193,7 @@ void comps_editor_update() {
 		editor_selection.y = editor_cursor.y;
 		editor_selection.h = editor_selection_origin.y - editor_cursor.y;
 	}
+	pos_addr = table_sprite_size_mode_translate(table_selection.x + (editor_selection.x >> 3) + ((table_selection.y + (editor_selection.y >> 3))  << 4));
 
 }
 

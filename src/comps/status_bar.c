@@ -28,7 +28,7 @@ void comps_status_bar_render() {
 		unsigned char status_text[256];
 		// text
 		ascii_color_set(colors[0x41]);
-		sprintf((char*) status_text, " TILE COUNT: %d    ROM SIZE: %d bytes    %s    FPS: %7.3f", rom_tile_count, file_chr_rom_size, header_type_str, fps_avg_display);
+		sprintf((char*) status_text, " $%04x   TILE COUNT: %d    ROM SIZE: %d bytes    %s    FPS: %7.3f", pos_addr, rom_tile_count, file_chr_rom_size, header_type_str, fps_avg_display);
 		ascii_text_render(status_text, 0, status_rect.y);
 	}
 	// halp notice

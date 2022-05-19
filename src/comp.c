@@ -16,6 +16,8 @@ SDL_Point editor_cursor;
 SDL_Rect editor_selection;
 SDL_Point editor_selection_origin;
 
+int pos_addr;
+
 
 #include "./comps/editor.c"
 #include "./comps/palettes.c"
@@ -35,6 +37,7 @@ void comp_init() {
 	editor_cursor = point;
 	editor_selection = rect;
 	editor_selection_origin = point;
+	pos_addr = 0;
 	comps_manual_init();
 }
 
