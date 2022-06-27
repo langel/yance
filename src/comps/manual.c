@@ -40,7 +40,7 @@ char manual_commands_global[][65] = {
 	"    Flip        F               Current Color     1,2,3,4",
 	"    Mirror      M               Change Color      Ctrl-Arrows",
 	"    Translate   CtrlShftArrows  Current Palette   Ctrl-(1..8)",
-	"    Rotate CW   R",
+	"    Rotate CW   R               Grid Toggle       G",
 	"    Rotate CCW  Shift-R         View Source       Ctrl-G",
 	"",
 	"",

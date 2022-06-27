@@ -1,6 +1,7 @@
 
 int editor_pixel_w;
 int editor_pixel_h;
+int editor_grid_mode = 0;
 
 void comps_editor_render() {
 	// adjust space for padding
@@ -38,6 +39,23 @@ void comps_editor_render() {
 				(int) ceilf(ratio),
 				(int) ceilf(ratio),
 			});
+		}
+	}
+
+	// GRID LINES (if enabled)
+	if (editor_grid_mode) {
+		render_color_set(renderer, colors[71]);
+		for (int x = 1; x < table_selection.w; x++) {
+			int xp = x_off + (int) floorf(ratio * (float) x);
+			SDL_RenderDrawLine(renderer, xp, y_off, xp, y_off + comp_space.h);
+			xp++;
+			SDL_RenderDrawLine(renderer, xp, y_off, xp, y_off + comp_space.h);
+		}
+		for (int y = 1; y < table_selection.h; y++) {
+			int yp = y_off + (int) floorf(ratio * (float) y);
+			SDL_RenderDrawLine(renderer, x_off, yp, x_off + comp_space.w, yp);
+			yp++;
+			SDL_RenderDrawLine(renderer, x_off, yp, x_off + comp_space.w, yp);
 		}
 	}
 

@@ -78,6 +78,11 @@ void comp_update() {
 		table_save();
 	}
 
+	// grid lines toggle
+	if (!keys_ctrl && keys[SDL_SCANCODE_G] == 1) {
+		editor_grid_mode = (editor_grid_mode + 1) % 2;
+	}
+
 	// open github
 	if (keys_ctrl && keys[SDL_SCANCODE_G] == 1) {
 		printf("opening source\n");
