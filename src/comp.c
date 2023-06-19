@@ -119,7 +119,7 @@ void comp_update() {
 	}
 
 	// redo
-	if (keys_ctrl && keys_shift && keys[SDL_SCANCODE_Z] == 1) {
+	if (keys_ctrl && keys[SDL_SCANCODE_Y] == 1) {
 		undo_redo();
 	}
 
