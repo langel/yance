@@ -29,6 +29,8 @@ void comps_status_bar_render() {
 		// text
 		ascii_color_set(colors[0x41]);
 		sprintf((char*) status_text, " $%04x   TILE COUNT: %d    ROM SIZE: %d bytes    %s    FPS: %7.3f", pos_addr, rom_tile_count, file_chr_rom_size, header_type_str, fps_avg_display);
+//		ascii_text_render(status_text, 0, status_rect.y);
+		sprintf((char*) status_text, " UNDO  head: %4d  tail: %4d  top %4d", undo_head, undo_tail, undo_top);
 		ascii_text_render(status_text, 0, status_rect.y);
 	}
 	// halp notice

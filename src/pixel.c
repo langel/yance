@@ -29,6 +29,7 @@ pixel_struct pixel_new() {
 }
 
 
+// convert pixel data to clipboard data
 const char * pixel_state_capture(pixel_struct pxl) {
 	int size = pxl.rect.w * pxl.rect.h;
 	char * string = malloc((0xc + size + 1) * sizeof(char*));
@@ -68,15 +69,31 @@ const char * pixel_state_capture(pixel_struct pxl) {
 }
 
 
+// plot pixel data to main table view
 void pixel_state_plot(pixel_struct pxl) {
+	printf("table write ");
 	for (int i = 0; i < pxl.size; i++) {
 		table_pixel_set_value(pxl.rect.x + (i % pxl.rect.w), pxl.rect.y + (i / pxl.rect.w), pxl.values[i]);
+		printf("%2x ", pxl.values[i]);
 	}
+	printf("\n");
+}
+
+// read pixel data to main chr buffer
+void pixel_state_read(pixel_struct pxl, char * str) {
+	const char * hex = "0123456789abcdef";
+	printf("%zu\n", sizeof(str));
+	printf("table read ");
+	for (int i = 0; i < pxl.size; i++) {
+		str[0x12 + i] = hex[table_pixel_get_value(pxl.rect.x + (i % pxl.rect.w), pxl.rect.y + (i / pxl.rect.w)) & 0x03];
+		printf("%2x ", str[0x12 + i]);
+	}
+	printf("\n");
 }
 
 
+// convert clipboard data to pixel data
 int pixel_state_reconstruct(pixel_struct * pxl, char * str) {
-	
 	// identifier
 	const char * ident = "YANCEp";
 	for (int i = 0; i < strlen(ident); i++) {
@@ -103,9 +120,12 @@ int pixel_state_reconstruct(pixel_struct * pxl, char * str) {
 	buff[1] = '\0';
 	free(pxl->values);
 	pxl->values = malloc(pxl->size);
+	printf("inside reconstruct\n");
 	for (int i = 0; i < pxl->size; i++) {
 		memcpy(buff, &str[0x12 + i], 1);
 		pxl->values[i] = (uint8_t) strtol(buff, NULL, 16);
+//		printf("%2x ", str[0x12+i]);
+		printf("%2x %s %2x \n", str[0x12+i], buff, pxl->values[i]);
 	}
 	return 0;
 }

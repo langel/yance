@@ -120,7 +120,7 @@ void comp_update() {
 
 	// redo
 	if (keys_ctrl && keys[SDL_SCANCODE_Y] == 1) {
-		undo_redo();
+		if (undo_forward() == -1) comps_status_bar_message_set(" @ top of Undo History ");
 	}
 
 	SDL_Rect oprect;
