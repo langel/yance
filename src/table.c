@@ -45,10 +45,6 @@ void table_update_palette() {
 void table_load(char * filename) {
 	// checkout header
 	file_load(filename);
-	strcpy(window_title, app_title);
-	strcat(window_title, " - ");
-	strcat(window_title, filename);
-	SDL_SetWindowTitle(window, window_title);
 	// actually load
 	FILE * file = fopen(filename, "rb");
 	rom_tile_count = file_chr_rom_size >> 4;
@@ -79,6 +75,9 @@ void table_new(int tile_count) {
 		_2bpp_to_tile(sizteen_bytes, &table_tiles[t]);
 	}
 	rom_tile_count = tile_count;
+	file_chr_rom_start = 0;
+	file_chr_rom_size = rom_tile_count << 4;
+	file_set_filename("new.chr");
 }
 
 void table_save() {
@@ -94,8 +93,8 @@ void table_save() {
 		}
 	}
 	// save
-	// XXX this won't work if they rename the file while editing
 	FILE * file = fopen(file_filename, "r+b");
+	if (file == NULL) file = fopen(file_filename, "w");
 	fseek(file, file_chr_rom_start, SEEK_SET);
 	fwrite(rom_binary, size, 1, file); 
 	fclose(file);

@@ -16,9 +16,20 @@ int file_prg_rom_size;
 int file_chr_rom_size;
 int file_chr_rom_start;
 
-void file_load(char * filename) {
+void file_set_filename(char * filename) {
+	// set string
+	free(file_filename);
 	file_filename = malloc(strlen(filename));
 	strcpy(file_filename, filename);
+	// update window title
+	strcpy(window_title, app_title);
+	strcat(window_title, " - ");
+	strcat(window_title, filename);
+	SDL_SetWindowTitle(window, window_title);
+}
+
+void file_load(char * filename) {
+	file_set_filename(filename);
 	FILE * file = fopen(filename, "rb");
 	header = malloc(16);
 	fread(header, 16, 1, file);
