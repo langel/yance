@@ -35,7 +35,8 @@ int main(int argc, char * args[]) {
 	SDL_RenderPresent(renderer);
 
 	src_all_init();
-	table_load("guntner.chr");
+	//table_load("guntner.chr");
+	table_new(512);
 
 //	SDL_ShowCursor(SDL_DISABLE);
 

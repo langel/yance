@@ -107,12 +107,9 @@ void comps_rom_table_render() {
 
 
 void comps_rom_table_update() {
-	void selection_reset() {
+	if (keys_ctrl && keys[SDL_SCANCODE_D]) {
 		table_selection.w = 1;
 		table_selection.h = 1;
-	}
-	if (keys_ctrl && keys[SDL_SCANCODE_D]) {
-		selection_reset();
 	}
 	if (keys[SDL_SCANCODE_PAGEUP] % key_repeat == 1) {
 		int diff = table_selection.y - 16;

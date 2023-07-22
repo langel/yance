@@ -72,6 +72,15 @@ void table_load(char * filename) {
 	free(rom_binary);
 }
 
+void table_new(int tile_count) {
+	uint8_t sizteen_bytes[16] = { 0 };
+	for (int t = 0; t < tile_count; t++) {
+		tile_initialize(&table_tiles[t]);
+		_2bpp_to_tile(sizteen_bytes, &table_tiles[t]);
+	}
+	rom_tile_count = tile_count;
+}
+
 void table_save() {
 	// setup
 	int size = rom_tile_count * 16;

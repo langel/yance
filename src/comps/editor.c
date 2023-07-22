@@ -135,10 +135,6 @@ void editor_paint() {
 
 
 void comps_editor_update() {
-	void selection_reset() {
-		editor_selection.w = 1;
-		editor_selection.h = 1;
-	}
 	if (keys[SDL_SCANCODE_SPACE]) {
 		if (keys[SDL_SCANCODE_SPACE] == 1) {
 			pixel_struct pxl = pixel_new();
@@ -153,7 +149,8 @@ void comps_editor_update() {
 		editor_paint();
 	}
 	if (keys_ctrl && keys[SDL_SCANCODE_D]) {
-		selection_reset();
+		editor_selection.w = 1;
+		editor_selection.h = 1;
 	}
 	if (!keys_ctrl) {
 		if (keys[SDL_SCANCODE_UP] % key_repeat == 1) {

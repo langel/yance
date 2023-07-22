@@ -17,7 +17,6 @@ void undo_record(const char * data) {
 	char * ptr = undo_log[undo_head];
 	free(ptr);
 	ptr = malloc((strlen(data) + 1) * sizeof(char));
-	printf("%zu\n", sizeof(ptr));
 	strcpy(ptr, data);
 	undo_log[undo_head] = ptr;
 	undo_head = (undo_head + 1) % undo_max_steps;
